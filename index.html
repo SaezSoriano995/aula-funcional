@@ -63,6 +63,10 @@ h1 em{font-style:normal;background:linear-gradient(transparent 62%,var(--mark-bg
 .ledger .foot{display:flex;justify-content:space-between;gap:12px;padding:12px 16px;border-top:1px dashed rgba(255,255,255,.18);font:500 .85rem/1.3 var(--mono)}
 .ledger .foot b{color:var(--code-num);font-weight:500}
 
+.ledger .row2{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:15px 16px;border-top:1px dashed rgba(255,255,255,.18);font:500 .95rem/1.35 var(--body)}
+.ledger .bar+.row2{border-top:0}
+.ledger .row2 b{font:500 .72rem/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--code-dim);white-space:nowrap}
+.ledger .row2 b.on{color:var(--code-key)}
 section{padding-block:56px;border-top:1px solid var(--line)}
 h2{font:700 clamp(1.6rem,3.4vw,2.2rem)/1.12 var(--display);letter-spacing:-.02em;margin:0 0 10px;text-wrap:balance}
 .sub{color:var(--muted);max-width:60ch;margin:0 0 32px}
@@ -141,15 +145,12 @@ footer p{margin:0 0 6px;max-width:80ch}
         <p class="note">Sin registro. Tu progreso se guarda en tu navegador.</p>
       </div>
 
-      <figure class="ledger" style="margin:0" aria-label="Ejemplo del módulo 1: calcular el IVA con un campo tipo p">
-        <div class="bar"><span>Curso de ABAP · Módulo 1</span><span>Ejemplo de ejercicio</span></div>
-<pre><span class="k">DATA</span> lv_neto <span class="k">TYPE p LENGTH</span> <span class="n">8</span> <span class="k">DECIMALS</span> <span class="n">2</span> <span class="k">VALUE</span> <span class="n">'1000.00'</span>.
-<span class="k">DATA</span> lv_iva  <span class="k">TYPE p LENGTH</span> <span class="n">8</span> <span class="k">DECIMALS</span> <span class="n">2</span>.
-
-lv_iva = lv_neto * <span class="n">'0.21'</span>.
-<span class="c">" lv_iva = 210.00</span></pre>
-        <div class="foot"><span>Base imponible</span><b>1.000,00</b></div>
-        <div class="foot" style="border-top:0;padding-top:0"><span>IVA</span><b>210,00</b></div>
+      <figure class="ledger" style="margin:0" aria-label="Resumen del catálogo de cursos">
+        <div class="bar"><span>Catálogo</span><span>Gratis · sin registro</span></div>
+        <div class="row2"><span>ABAP para consultores funcionales</span><b class="on">Disponible</b></div>
+        <div class="row2"><span>SAP FI en España</span><b>En preparación</b></div>
+        <div class="row2"><span>Preparación de certificación FI</span><b>En preparación</b></div>
+        <div class="row2"><span>Más cursos</span><b>En camino</b></div>
       </figure>
     </div>
 
