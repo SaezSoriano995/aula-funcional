@@ -135,6 +135,31 @@ label.f{display:block;font:600 12px var(--f-mono);letter-spacing:.05em;text-tran
   dl.vocab{grid-template-columns:minmax(0,1fr)}
   dl.vocab dd{margin-bottom:6px}
 }
+a.btn{text-decoration:none;display:inline-block}
+.certbox{margin:0 0 14px;font-size:13px;color:var(--muted)}
+.certbox p{margin:0}
+.cert{max-width:760px;margin:18px 0;padding:10px;border:2px solid var(--accent);border-radius:6px;background:var(--surface)}
+.cert-in{border:1px solid var(--accent);padding:34px 28px;text-align:center}
+.cert-eyebrow{font:600 12px var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.cert h2{font:800 clamp(24px,4.5vw,36px)/1.1 var(--f-display);margin:10px 0 18px}
+.cert p{margin:0 0 10px}
+.cert-name{font:700 clamp(24px,4.5vw,34px)/1.2 var(--f-display);margin:6px 0 14px;padding-bottom:10px;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
+.cert-name.empty{color:var(--muted);font-weight:500}
+.cert-course{font:700 clamp(18px,3vw,24px)/1.25 var(--f-display);color:var(--accent);margin:4px 0 8px}
+.cert-date{font:500 14px var(--f-mono);margin:18px 0 14px}
+.cert-fine{font-size:11.5px;color:var(--muted);max-width:60ch;margin:0 auto!important}
+@media print{
+  @page{size:A4 landscape;margin:12mm}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:#fff!important;color:#111!important;padding:0!important}
+  aside,.nopr,body>p{display:none!important}
+  .app{display:block}
+  .cert{background:#fff!important;color:#111!important;border-color:#0A6A92!important;margin:0 auto;max-width:none}
+  .cert-in{border-color:#0A6A92!important}
+  .cert-eyebrow,.cert-course{color:#0A6A92!important}
+  .cert-name{border-bottom-color:#999!important}
+  .cert-fine{color:#444!important}
+}
 @media (prefers-reduced-motion:reduce){.bar i{transition:none}}
 </style>
 <style>body{margin:0}[hidden]{display:none!important}</style>
@@ -145,6 +170,7 @@ label.f{display:block;font:600 12px var(--f-mono);letter-spacing:.05em;text-tran
   <aside>
     <div class="brand">Aprendizaje ABAP<small>Para consultores funcionales FICO</small></div>
     <div class="total"><div class="lbl"><span>Progreso</span><span id="tot-n">0 / 44</span></div><div class="bar"><i id="tot-b" style="width:0%"></i></div></div>
+    <div class="certbox" id="certbox"></div>
     <nav class="mods" id="mods" aria-label="Módulos"></nav>
     <div class="resetbox" id="resetbox"></div>
   </aside>
@@ -1036,8 +1062,8 @@ D) Validar los documentos importantes rápidamente.`,q:'¿Cuál está mejor escr
 /* ---------- estado ---------- */
 var KEY='abap-curso-v1';
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||{};}catch(e){return {};}}
-function save(){try{localStorage.setItem(KEY,JSON.stringify({prog:P.prog,cur:P.cur,step:P.step}));}catch(e){}}
-var P=load();P.prog=P.prog||{};P.cur=P.cur||1;P.step=(P.step!=null)?P.step:0;
+function save(){try{localStorage.setItem(KEY,JSON.stringify({prog:P.prog,cur:P.cur,step:P.step,name:P.name,certDate:P.certDate}));}catch(e){}}
+var P=load();P.prog=P.prog||{};P.name=P.name||'';P.cur=P.cur||1;P.step=(P.step!=null)?P.step:0;
 var M={predict:{},quiz:{},code:{},res:{},cases:{},rev:{},builder:null,exi:{}};
 var STEPS=['Lección','Predice','Ejercicio','Quiz'];
 function pr(m){P.prog[m]=P.prog[m]||{};return P.prog[m];}
@@ -1046,10 +1072,14 @@ function stepDone(m,i){var p=P.prog[m]||{};return i===0?!!p.lesson:i===1?!!p.pre
 function mod(id){return MODS[id-1];}
 
 /* ---------- barra lateral ---------- */
+var showCert=false;
+function allDone(){return MODS.every(function(m){for(var i=0;i<4;i++)if(!stepDone(m.id,i))return false;return true;});}
 function renderSide(){
   var n=0;MODS.forEach(function(m){for(var i=0;i<4;i++)if(stepDone(m.id,i))n++;});
   document.getElementById('tot-n').textContent=n+' / 44';
   document.getElementById('tot-b').style.width=(n/44*100)+'%';
+  var cb=document.getElementById('certbox');
+  if(cb)cb.innerHTML=allDone()?'<button class="btn sm" data-act="cert">Obtener mi diploma</button>':'<p>Al completar los 11 módulos podrás obtener tu diploma de finalización.</p>';
   document.getElementById('mods').innerHTML=MODS.map(function(m){
     var dots='';for(var i=0;i<4;i++)dots+='<i class="'+(stepDone(m.id,i)?'on':'')+'"></i>';
     return '<button class="mod" data-act="go" data-m="'+m.id+'" aria-current="'+(m.id===P.cur)+'"><span class="n">'+m.id+'</span><span class="t">'+esc(m.title)+'</span><span class="dots" aria-hidden="true">'+dots+'</span></button>';
@@ -1214,8 +1244,26 @@ function pQuiz(m){
   return h+'</div>';
 }
 
+function pCert(){
+  if(!P.certDate){P.certDate=new Date().toISOString().slice(0,10);save();}
+  var d=new Date(P.certDate+'T12:00:00');
+  var fecha=d.toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'});
+  var li='https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name='+encodeURIComponent('ABAP para consultores funcionales')+'&organizationName='+encodeURIComponent('Aula Funcional')+'&issueYear='+d.getFullYear()+'&issueMonth='+(d.getMonth()+1);
+  var h='<div class="panel nopr"><div class="eyebrow">Curso completado</div><h1>Tu diploma</h1><p>Has completado los 11 módulos. Escribe tu nombre como quieres que aparezca en el diploma.</p>';
+  h+='<label class="f" for="cert-in">Nombre y apellidos</label><input type="text" id="cert-in" data-act-input="name" value="'+esc(P.name||'').replace(/"/g,'&quot;')+'" maxlength="80" autocomplete="name">';
+  h+='<div class="row"><button class="btn" data-act="certPrint">Imprimir o guardar como PDF</button><a class="btn ghost" href="'+li+'" target="_blank" rel="noopener">Añadir a LinkedIn</a></div>';
+  h+='<p class="verify" style="margin-top:14px">En el cuadro de impresión elige «Guardar como PDF» para obtener el archivo. El enlace de LinkedIn rellena el nombre del curso, la entidad y la fecha; el resto de campos se completan allí.</p></div>';
+  h+='<div class="cert"><div class="cert-in"><div class="cert-eyebrow">Aula Funcional</div><h2>Certificado de finalización</h2><p>Se acredita que</p>';
+  h+='<div class="cert-name'+(P.name?'':' empty')+'" id="cert-name">'+esc(P.name||'Nombre y apellidos')+'</div>';
+  h+='<p>ha completado el curso</p><div class="cert-course">ABAP para consultores funcionales</div><p>11 módulos con lecciones, predicciones de código, ejercicios y quizzes</p>';
+  h+='<div class="cert-date">'+esc(fecha)+'</div>';
+  h+='<p class="cert-fine">Este certificado acredita la finalización del curso en la plataforma Aula Funcional, a partir del progreso registrado en el navegador del alumno. No es una certificación oficial de SAP ni un título homologado. Proyecto independiente, sin relación con SAP SE.</p></div></div>';
+  return h;
+}
+
 /* ---------- principal ---------- */
 function renderMain(){
+  if(showCert&&allDone()){document.getElementById('main').innerHTML=pCert();return;}
   var m=mod(P.cur),main=document.getElementById('main');
   var h='<div class="eyebrow">Módulo '+m.id+' de '+MODS.length+' · '+esc(m.sub)+'</div><h1>'+esc(m.title)+'</h1><p class="why">'+esc(m.why)+'</p>';
   h+='<p class="note"><b>Qué está comprobado:</b> nada de lo que ves aquí se ha ejecutado en un sistema SAP. Los resultados de «Predice» y las respuestas del quiz son teoría razonada. La revisión de ejercicios busca patrones en tu texto. Lo marcado como «Verifícalo en tu sistema» conviene comprobarlo en SE11, SE37, SE18 o ADT.</p>';
@@ -1231,6 +1279,9 @@ function toTop(){var e=document.querySelector('.eyebrow');if(e&&e.scrollIntoView
 document.addEventListener('click',function(ev){
   var b=ev.target.closest('[data-act]');if(!b)return;
   var act=b.getAttribute('data-act'),m=mod(P.cur);
+  if(act==='go'||act==='step')showCert=false;
+  if(act==='cert'){showCert=true;renderMain();window.scrollTo(0,0);return;}
+  if(act==='certPrint'){try{window.print();}catch(e){}return;}
   if(act==='go'){P.cur=+b.getAttribute('data-m');P.step=0;save();render();toTop();}
   else if(act==='step'){P.step=+b.getAttribute('data-s');save();renderMain();toTop();}
   else if(act==='lessonDone'){mark(m.id,'lesson',true);P.step=1;save();render();toTop();}
@@ -1243,7 +1294,7 @@ document.addEventListener('click',function(ev){
   else if(act==='qreset'){M.quiz[m.id]=[];renderMain();toTop();}
   else if(act==='resetAsk'){askReset=true;renderReset();}
   else if(act==='resetNo'){askReset=false;renderReset();}
-  else if(act==='resetYes'){askReset=false;P.prog={};P.cur=1;P.step=0;M.predict={};M.quiz={};M.code={};M.res={};M.cases={};M.rev={};M.builder=null;M.exi={};save();render();toTop();}
+  else if(act==='resetYes'){askReset=false;showCert=false;P.certDate='';P.prog={};P.cur=1;P.step=0;M.predict={};M.quiz={};M.code={};M.res={};M.cases={};M.rev={};M.builder=null;M.exi={};save();render();toTop();}
   else if(act==='bcopy'){
     var txt=bText(),msg=document.getElementById('b-msg');
     var fallback=function(){var out=document.getElementById('b-out'),r=document.createRange();r.selectNodeContents(out);var s=window.getSelection();s.removeAllRanges();s.addRange(r);if(msg)msg.textContent='Selecciona y copia con Ctrl+C';};
@@ -1254,6 +1305,7 @@ document.addEventListener('input',function(ev){
   var t=ev.target,k=t.getAttribute&&t.getAttribute('data-act-input');if(!k)return;
   var m=mod(P.cur);
   if(k==='code')M.code[xk(m)]=t.value;
+  else if(k==='name'){P.name=t.value;save();var cn=document.getElementById('cert-name');if(cn){cn.textContent=P.name||'Nombre y apellidos';cn.className='cert-name'+(P.name?'':' empty');}return;}
   else if(k==='b'){initBuilder();M.builder[t.getAttribute('data-k')]=t.value;bRefresh(m);}
 });
 document.addEventListener('change',function(ev){
