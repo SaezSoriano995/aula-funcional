@@ -162,13 +162,15 @@ a.btn{text-decoration:none;display:inline-block}
 }
 @media (prefers-reduced-motion:reduce){.bar i{transition:none}}
 </style>
-<style>body{margin:0}[hidden]{display:none!important}</style>
+<style>body{margin:0}[hidden]{display:none!important}.themebtn{margin-top:12px}</style>
+<script>try{var t=localStorage.getItem("af-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
 </head>
 <body>
 
 <div class="app">
   <aside>
     <div class="brand">Aprendizaje ABAP<small>Para consultores funcionales FICO</small></div>
+    <button class="btn ghost sm themebtn" id="themeBtn" type="button" aria-label="Cambiar entre tema claro y oscuro">Tema oscuro</button>
     <div class="total"><div class="lbl"><span>Progreso</span><span id="tot-n">0 / 44</span></div><div class="bar"><i id="tot-b" style="width:0%"></i></div></div>
     <div class="certbox" id="certbox"></div>
     <nav class="mods" id="mods" aria-label="Módulos"></nav>
@@ -1320,6 +1322,20 @@ if(P.step<0||P.step>3)P.step=0;
 render();
 })();
 </script>
-
+<script>
+(function(){
+  var root=document.documentElement,btn=document.getElementById('themeBtn');
+  if(!btn)return;
+  function current(){var t=root.getAttribute('data-theme');if(t)return t;return window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}
+  function paint(){btn.textContent=current()==='dark'?'Tema claro':'Tema oscuro';}
+  paint();
+  btn.addEventListener('click',function(){
+    var next=current()==='dark'?'light':'dark';
+    root.setAttribute('data-theme',next);
+    try{localStorage.setItem('af-theme',next);}catch(e){}
+    paint();
+  });
+})();
+</script>
 </body>
 </html>
