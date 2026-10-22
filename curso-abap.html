@@ -1,0 +1,1273 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Curso interactivo de ABAP en español para consultores funcionales SAP: lecciones, ejercicios y quizzes en 11 módulos.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Aprendizaje ABAP para consultores funcionales">
+<meta property="og:description" content="Lecciones, predicciones de código, ejercicios y quizzes en 11 módulos para entender a los desarrolladores ABAP.">
+<meta property="og:locale" content="es_ES">
+<title>Aprendizaje ABAP</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: barra lateral de módulos + área de trabajo con 4 pasos (lección, predice, ejercicio, quiz) */
+:root{
+  --bg:#EDF0F3; --surface:#F8FAFB; --fg:#14202B; --muted:#53636F; --line:#CCD5DC;
+  --accent:#0A6A92; --accent-ink:#FFFFFF; --accent-soft:#D6E9F2;
+  --hi:#8F5D00; --hi-soft:#F4E6C6;
+  --ok:#17794A; --ok-soft:#D3EBDD; --bad:#B03120; --bad-soft:#F6D9D3;
+  --code-bg:#E3E9EF; --kw:#0A5C85; --str:#8A5A00; --com:#5F707D;
+  --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E161D; --surface:#16212A; --fg:#E4ECF2; --muted:#9AABB9; --line:#2B3A47;
+    --accent:#52B7E4; --accent-ink:#06202D; --accent-soft:#17323F;
+    --hi:#E3B04B; --hi-soft:#3A2F14;
+    --ok:#55C48C; --ok-soft:#15332A; --bad:#F28672; --bad-soft:#3B1D18;
+    --code-bg:#0A1117; --kw:#6CC3EC; --str:#E3B04B; --com:#8397A6;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E161D; --surface:#16212A; --fg:#E4ECF2; --muted:#9AABB9; --line:#2B3A47;
+  --accent:#52B7E4; --accent-ink:#06202D; --accent-soft:#17323F;
+  --hi:#E3B04B; --hi-soft:#3A2F14;
+  --ok:#55C48C; --ok-soft:#15332A; --bad:#F28672; --bad-soft:#3B1D18;
+  --code-bg:#0A1117; --kw:#6CC3EC; --str:#E3B04B; --com:#8397A6;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:15px/1.6 var(--f-body);padding-inline:16px;padding-block:20px 40px}
+.app{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:270px minmax(0,1fr);gap:28px;align-items:start}
+aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);min-width:0}
+.brand{font:800 22px/1.1 var(--f-display);letter-spacing:-.01em}
+.brand small{display:block;font:500 12px/1.4 var(--f-body);color:var(--muted);letter-spacing:.04em;text-transform:uppercase;margin-top:6px}
+.total{margin:16px 0 14px}
+.total .lbl{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px;font-variant-numeric:tabular-nums}
+.bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);transition:width .3s}
+.mods{display:flex;flex-direction:column;gap:2px}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,textarea:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.mod{display:grid;grid-template-columns:26px minmax(0,1fr) auto;align-items:center;gap:8px;text-align:left;background:none;border:0;border-radius:6px;padding:7px 8px}
+.mod:hover{background:var(--accent-soft)}
+.mod[aria-current="true"]{background:var(--accent-soft);box-shadow:inset 3px 0 0 var(--accent)}
+.mod .n{font:600 13px var(--f-mono);color:var(--muted)}
+.mod .t{font-size:14px;line-height:1.3}
+.dots{display:flex;gap:3px}
+.dots i{width:7px;height:7px;border-radius:50%;border:1.5px solid var(--muted)}
+.dots i.on{background:var(--ok);border-color:var(--ok)}
+.subtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.sub{background:none;border:1px solid var(--line);border-radius:6px;padding:6px 12px;font-size:13px}
+.sub.on{background:var(--accent-soft);border-color:var(--accent)}
+.resetbox{margin-top:16px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.resetbox .row{margin-top:8px}
+.btn.sm{padding:6px 12px;font-size:13px}
+main{min-width:0}
+.eyebrow{font:600 12px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+h1{font:800 clamp(28px,5vw,42px)/1.08 var(--f-display);letter-spacing:-.02em;margin:6px 0 10px;text-wrap:balance}
+.why{color:var(--muted);max-width:68ch;margin:0 0 14px}
+.note{font-size:13px;color:var(--muted);border-left:3px solid var(--hi);background:var(--hi-soft);padding:8px 12px;border-radius:0 6px 6px 0;margin:0 0 18px;max-width:78ch}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:22px;overflow-x:auto}
+.tab{background:none;border:0;border-bottom:3px solid transparent;padding:10px 14px;font-weight:500;color:var(--muted);white-space:nowrap;margin-bottom:-1px}
+.tab[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--accent)}
+.tab .ck{color:var(--ok);margin-left:6px}
+.panel{max-width:78ch}
+h2{font:700 22px/1.2 var(--f-display);margin:0 0 14px}
+h3{font:700 17px/1.3 var(--f-display);margin:28px 0 8px}
+p{margin:0 0 12px}
+ul,ol{margin:0 0 14px;padding-left:22px}
+li{margin-bottom:4px}
+code{font:13.5px var(--f-mono);background:var(--code-bg);padding:1px 5px;border-radius:4px}
+pre.code{font:13px/1.55 var(--f-mono);background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow-x:auto;margin:10px 0 16px;white-space:pre}
+pre.code code{background:none;padding:0;font:inherit}
+.k{color:var(--kw);font-weight:500}.s{color:var(--str)}.c{color:var(--com);font-style:italic}
+.verify{font-size:13px;color:var(--muted);border-left:3px solid var(--accent);padding:2px 0 2px 10px}
+.verify b{color:var(--fg)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+.tw{overflow-x:auto;margin:10px 0 16px;border:1px solid var(--line);border-radius:8px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 12px var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+dl.vocab{display:grid;grid-template-columns:minmax(0,170px) minmax(0,1fr);gap:8px 16px;margin:8px 0 18px}
+dl.vocab dt{font:500 13.5px var(--f-mono);color:var(--accent)}
+dl.vocab dd{margin:0}
+.btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:6px;padding:9px 16px;font-weight:600}
+.btn.ghost{background:none;color:var(--fg);border:1px solid var(--line)}
+.btn:hover{filter:brightness(1.08)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:16px;min-width:0}
+.card .q{font-weight:600;margin:4px 0 10px}
+.opts{display:flex;flex-direction:column;gap:6px}
+.opt{text-align:left;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 12px}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt.ok{background:var(--ok-soft);border-color:var(--ok)}
+.opt.bad{background:var(--bad-soft);border-color:var(--bad)}
+.opt[disabled]{cursor:default}
+.fb{margin-top:10px;font-size:14px;padding:8px 12px;border-radius:6px}
+.fb.ok{background:var(--ok-soft)}.fb.bad{background:var(--bad-soft)}
+.tag{display:inline-block;font:600 11px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--hi);background:var(--hi-soft);padding:2px 7px;border-radius:4px}
+textarea,select,input[type=text]{width:100%;font:13.5px/1.5 var(--f-mono);background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+textarea{resize:vertical;tab-size:2}
+select{width:auto;max-width:100%;font-family:var(--f-body);font-size:14px;padding:7px 10px}
+.checks{list-style:none;padding:0;margin:14px 0}
+.checks li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:6px;padding:5px 0;border-bottom:1px solid var(--line)}
+.checks .y{color:var(--ok);font-weight:700}.checks .n{color:var(--bad);font-weight:700}.checks .o{color:var(--muted)}
+.checks small{display:block;color:var(--muted)}
+.case{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 14px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.case .why{grid-column:1/-1;margin:0;font-size:13px}
+.case .r{font-weight:700}
+.score{font:800 34px var(--f-display);font-variant-numeric:tabular-nums}
+label.f{display:block;font:600 12px var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:14px 0 5px}
+.chips{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.chip{font-size:13.5px;padding:6px 10px;border-radius:6px;background:var(--hi-soft);border-left:3px solid var(--hi)}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr);gap:18px}
+  aside{position:static}
+  .mods{flex-direction:row;overflow-x:auto;gap:6px;padding-bottom:6px}
+  .mod{flex:0 0 auto;grid-template-columns:auto auto;padding:6px 10px;border:1px solid var(--line)}
+  .mod .dots{display:none}
+  .mod[aria-current="true"]{box-shadow:none;border-color:var(--accent)}
+  dl.vocab{grid-template-columns:minmax(0,1fr)}
+  dl.vocab dd{margin-bottom:6px}
+}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+<style>body{margin:0}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+<div class="app">
+  <aside>
+    <div class="brand">Aprendizaje ABAP<small>Para consultores funcionales FICO</small></div>
+    <div class="total"><div class="lbl"><span>Progreso</span><span id="tot-n">0 / 44</span></div><div class="bar"><i id="tot-b" style="width:0%"></i></div></div>
+    <nav class="mods" id="mods" aria-label="Módulos"></nav>
+    <div class="resetbox" id="resetbox"></div>
+  </aside>
+  <main id="main"></main>
+</div>
+
+<p style="max-width:1180px;margin:32px auto 0;font-size:12px;color:var(--muted)">Curso independiente, sin relación con SAP SE. SAP y los nombres de sus productos son marcas registradas de SAP SE. El contenido es formativo y no sustituye a la documentación oficial.</p>
+<script>
+(function(){
+/* ---------- utilidades ---------- */
+var esc=function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')};
+var KWS=('REPORT DATA TYPES CONSTANTS PARAMETERS SELECT-OPTIONS TABLES IF ELSEIF ELSE ENDIF CASE WHEN ENDCASE DO ENDDO WHILE ENDWHILE LOOP ENDLOOP AT INTO TO FROM WHERE WRITE FORM ENDFORM PERFORM USING CHANGING CLASS DEFINITION IMPLEMENTATION ENDCLASS METHOD METHODS ENDMETHOD PUBLIC SECTION PRIVATE PROTECTED IMPORTING EXPORTING RETURNING VALUE TYPE REF NEW READ TABLE WITH KEY APPEND SELECT SINGLE ENDSELECT UP ROWS CALL FUNCTION START-OF-SELECTION INITIALIZATION AND OR NOT IS INITIAL BEGIN OF END STANDARD LENGTH DECIMALS OBLIGATORY TRY CATCH ENDTRY MESSAGE ORDER BY GROUP IN FOR ALL ENTRIES CONTINUE EXIT CHECK RETURN AUTHORITY-CHECK OBJECT ID FIELD INTERFACES INHERITING REDEFINITION define view entity as select from key where inner join on association to'.split(' ')).sort(function(a,b){return b.length-a.length});
+var KWRE=new RegExp([/^\*[^\n]*/.source,/(?:"|\/\/)[^\n]*/.source,/'[^'\n]*'/.source,/\|[^|\n]*\|/.source,'\\b(?:'+KWS.join('|')+')\\b'].map(function(x){return '('+x+')'}).join('|'),'gim');
+function hl(src){var out='',last=0,m;KWRE.lastIndex=0;while((m=KWRE.exec(src))){out+=esc(src.slice(last,m.index));var cls=(m[1]||m[2])?'c':((m[3]||m[4])?'s':'k');out+='<span class="'+cls+'">'+esc(m[0])+'</span>';last=m.index+m[0].length;}return out+esc(src.slice(last));}
+function K(code){return '<pre class="code"><code>'+hl(code.replace(/^\n/,'').replace(/\s+$/,''))+'</code></pre>';}
+function stripComments(code){return code.split('\n').map(function(line){if(/^\*/.test(line))return '';var q=false,out='';for(var i=0;i<line.length;i++){var ch=line[i];if(ch==="'")q=!q;if(ch==='"'&&!q)break;out+=ch;}return out;}).join('\n');}
+function litless(c){return c.replace(/'[^'\n]*'/g,"''");}
+var STMT='DATA|WRITE|CONSTANTS|TYPES|PARAMETERS|IF|ENDIF|LOOP|ENDLOOP|DO|ENDDO|FORM|ENDFORM|PERFORM|APPEND|CALL|MESSAGE|CLASS|ENDCLASS|METHOD|ENDMETHOD|ELSE|ELSEIF|READ|START-OF-SELECTION';
+function punctOk(nc){var t=nc.replace(/\s+$/,'');if(!t)return false;if(!/[.]$/.test(t))return false;return !new RegExp('[^.,:\\s]\\s*\\n\\s*(?:'+STMT+')\\b','i').test(t);}
+var PUNCT={t:'Cada sentencia termina en punto',f:function(nc){return punctOk(nc);},h:'Falta un punto al final de alguna sentencia. (Revisión heurística: si partes una sentencia en varias líneas, el punto va solo al final.)'};
+
+/* ---------- contenido ---------- */
+var MODS=[];
+
+MODS.push({
+ id:1,title:'Fundamentos',sub:'Tipos, variables y sintaxis',
+ why:'Para leer cualquier especificación técnica o código de un compañero necesitas reconocer cómo se declaran los datos y por qué un importe no se guarda como un texto ni un número de documento como un entero.',
+ lesson:[
+  {h:'Un programa es una lista de sentencias',b:'<p>ABAP no distingue mayúsculas de minúsculas. Cada <b>sentencia termina en punto</b>. Un comentario de línea completa empieza con <code>*</code> en la primera columna; a mitad de línea se usa <code>"</code>.</p>'+K(`
+REPORT zfi_demo_iva.
+
+* Declaración de variables
+DATA lv_base TYPE p LENGTH 8 DECIMALS 2 VALUE 1000.
+DATA lv_iva  TYPE p LENGTH 8 DECIMALS 2.
+
+lv_iva = lv_base * '0.21'.   " 21 %
+WRITE: / 'IVA:', lv_iva.`)+'<p>ABAP no tiene literales decimales sin comillas: <code>0.21</code> da error de sintaxis. Se escribe <code>\'0.21\'</code> o <code>21 / 100</code>.</p><p>Un <b>report</b> (programa ejecutable) se edita en SE38 y se ejecuta con F8 o desde una transacción propia. Todo lo que sigue a <code>REPORT</code> y a las declaraciones se ejecuta de arriba abajo.</p>'},
+  {h:'Tipos elementales que verás todo el rato',b:'<div class="tw"><table><tr><th>Tipo</th><th>Qué guarda</th><th>Ejemplo FI</th></tr>'+
+   '<tr><td><code>i</code></td><td>Entero</td><td>Contador de líneas</td></tr>'+
+   '<tr><td><code>p</code></td><td>Decimal empaquetado (exacto)</td><td>Importes (WRBTR, DMBTR)</td></tr>'+
+   '<tr><td><code>c</code></td><td>Texto de longitud fija</td><td>BUKRS (4), BELNR (10)</td></tr>'+
+   '<tr><td><code>n</code></td><td>Texto solo con dígitos, relleno con ceros</td><td>GJAHR (ejercicio, 4)</td></tr>'+
+   '<tr><td><code>string</code></td><td>Texto de longitud variable</td><td>Mensajes, texto de posición largo</td></tr>'+
+   '<tr><td><code>d</code> / <code>t</code></td><td>Fecha AAAAMMDD / hora HHMMSS</td><td>BUDAT, CPUDT</td></tr>'+
+   '<tr><td><code>f</code></td><td>Coma flotante (aproximado)</td><td>Se evita para dinero</td></tr></table></div>'+
+   '<p>Los importes de moneda (tipo CURR) se guardan con 2 decimales internos y la tabla de monedas (TCURX) indica los decimales reales de cada moneda. Por eso un importe en JPY o en KWD se interpreta distinto.</p>'+
+   '<p class="verify"><b>Verifícalo en tu sistema:</b> SE11 con el elemento de datos <code>WRBTR</code> y la tabla <code>TCURX</code>.</p>'},
+  {h:'Tipos del Diccionario: elementos de datos',b:'<p>En código real casi nunca se escribe <code>TYPE c LENGTH 4</code> para una sociedad. Se usa el <b>elemento de datos</b> del Diccionario ABAP (SE11), por ejemplo <code>TYPE bukrs</code>.</p>'+K(`
+DATA lv_bukrs   TYPE bukrs.          " sociedad
+DATA lv_belnr   TYPE belnr_d.        " número de documento
+DATA lv_importe TYPE wrbtr.          " importe en moneda del documento
+DATA lv_fecha   TYPE budat.          " fecha de contabilización
+DATA ls_bkpf    TYPE bkpf.           " estructura con una fila completa de BKPF
+DATA lv_otro    LIKE ls_bkpf-belnr.  " mismo tipo que un campo existente (forma antigua)`)+'<p>Un elemento de datos se apoya en un <b>dominio</b> (tipo técnico y longitud) y aporta etiquetas de campo, ayuda de búsqueda y, a veces, una <b>rutina de conversión</b> (como ALPHA, más abajo). Por eso un campo BELNR y un <code>c LENGTH 10</code> no son lo mismo aunque midan igual.</p><p class="verify"><b>Verifícalo en tu sistema:</b> SE11, elemento de datos <code>BUKRS</code>: pestaña «Tipo de datos» (dominio) y «Etiquetas de campo».</p>'},
+  {h:'Declarar: DATA, CONSTANTS, TYPES, PARAMETERS',b:'<ul><li><code>DATA</code>: variable que cambia.</li><li><code>CONSTANTS</code>: valor fijo.</li><li><code>TYPES</code>: define un tipo propio (se usa mucho con estructuras, módulo 3).</li><li><code>PARAMETERS</code>: variable que el usuario rellena en la pantalla de selección (módulo 8).</li></ul>'+K(`
+DATA lv_texto TYPE string.
+DATA(lv_nuevo) = 5.           " declaración en línea: tipo deducido (7.40 o superior)
+CONSTANTS gc_iva TYPE p LENGTH 4 DECIMALS 2 VALUE '0.21'.`)+'<p>Con <code>VALUE</code> se da un valor inicial. En una declaración, <code>VALUE</code> solo admite literales o constantes: <code>VALUE sy-datum</code> no es válido; para eso se asigna después.</p>'},
+  {h:'Importes y monedas en FI',b:'<p>Un importe nunca viaja solo: va acompañado de su <b>clave de moneda</b>. En las posiciones del documento (BSEG) verás dos importes y en la cabecera (BKPF), las monedas correspondientes.</p><div class="tw"><table><tr><th>Campo</th><th>Qué es</th></tr><tr><td><code>WRBTR</code> + <code>WAERS</code></td><td>Importe en moneda del documento y su moneda (por ejemplo, la de la factura)</td></tr><tr><td><code>DMBTR</code> + <code>HWAER</code></td><td>Importe en moneda local de la sociedad y su moneda local</td></tr></table></div><ul><li>Sumar importes de monedas distintas sin convertir da un resultado sin sentido. La especificación debe decir en qué moneda se suma.</li><li>Los decimales reales dependen de la moneda (TCURX). Una moneda sin decimales como JPY obliga a tener cuidado al mostrar o exportar.</li><li>Los tipos de cambio se aplican con funciones o clases estándar; no se calculan a mano.</li></ul><p class="verify"><b>Verifícalo en tu sistema:</b> SE11, tabla <code>BKPF</code> (campos WAERS, HWAER) y tabla <code>BSEG</code> (campos WRBTR, DMBTR). En S/4HANA, el diario universal <code>ACDOCA</code> guarda además importes en las monedas del libro mayor.</p>'},
+  {h:'Operaciones y aritmética que sorprende',b:'<ul><li><code>/</code> es división; <code>DIV</code> es división entera; <code>MOD</code> es el resto.</li><li>Al asignar a una variable <code>i</code>, el resultado se <b>redondea</b>, no se trunca.</li><li>Al asignar a un <code>p</code> con menos decimales de los que trae el resultado, también se <b>redondea</b> (0,5 sube).</li><li>Un texto en una variable más corta se <b>corta sin avisar</b>.</li></ul>'+K(`
+DATA lv_p TYPE p LENGTH 8 DECIMALS 2.
+lv_p = 10 / 3.           " 3,33
+lv_p = lv_p * 3.         " 9,99, no 10,00: ya se redondeó antes`)+'<p>Consecuencia para la especificación: cuando hay IVA o retenciones, di <b>en qué momento se redondea</b> (por línea o por total). Es la causa más habitual de diferencias de un céntimo.</p>'},
+  {h:'Texto: cadenas y ceros a la izquierda',b:K(`
+DATA lv_txt TYPE string VALUE '  factura   enero '.
+CONDENSE lv_txt.                                     " quita espacios sobrantes
+lv_txt = to_upper( lv_txt ).                         " pasa a mayúsculas
+DATA(lv_n)   = strlen( lv_txt ).                     " longitud
+DATA(lv_ini) = substring( val = lv_txt off = 0 len = 7 ).
+
+lv_txt = |Documento { lv_belnr } de { lv_bukrs }|.   " plantilla de cadena
+CONCATENATE 'AB' 'CD' INTO lv_txt.                   " forma antigua`)+'<p>Proveedores, clientes y documentos se guardan con <b>ceros a la izquierda</b> (<code>\'0001000234\'</code>), pero el usuario escribe <code>1000234</code>. La rutina de conversión <b>ALPHA</b> los convierte: en la entrada añade ceros y en la salida los quita.</p>'+K(`
+DATA lv_lifnr TYPE lifnr.
+lv_lifnr = |{ lv_entrada ALPHA = IN }|.      " 1000234 -> 0001000234
+DATA(lv_visible) = |{ lv_lifnr ALPHA = OUT }|. " 0001000234 -> 1000234
+
+DATA lv_belnr TYPE c LENGTH 10 VALUE '0000012345'.
+SHIFT lv_belnr LEFT DELETING LEADING '0'.   " quita los ceros iniciales`)+'<p>Si un programa compara <code>\'1000234\'</code> con <code>\'0001000234\'</code> como texto, no coinciden. Es la causa clásica de «no encuentra el proveedor». En código antiguo verás el módulo de función <code>CONVERSION_EXIT_ALPHA_INPUT</code> para lo mismo.</p>'},
+  {h:'Fechas, horas y periodos',b:'<p>Internamente una fecha es <code>AAAAMMDD</code> (<code>20260131</code>); el formato que ve el usuario depende de su perfil. Sumar o restar días funciona con el calendario real.</p>'+K(`
+DATA lv_fecha TYPE d.
+DATA lv_venc  TYPE d.
+DATA lv_dias  TYPE i.
+DATA lv_mes   TYPE n LENGTH 2.
+
+lv_fecha = sy-datum.               " hoy
+lv_venc  = lv_fecha + 30.          " 30 días después
+lv_dias  = lv_venc - lv_fecha.     " diferencia en días: 30
+lv_mes   = lv_fecha+4(2).          " mes: posición 4, longitud 2
+WRITE: / lv_fecha(4).              " año: los 4 primeros caracteres`)+'<p><b>Ojo con el ejercicio y el periodo:</b> no se deducen solo de la fecha. Dependen de la <b>variante de ejercicio</b> de la sociedad (ejercicios no naturales, periodos especiales). Si necesitas un periodo, la especificación debe pedir que se determine con la variante de ejercicio de la sociedad.</p><p class="verify"><b>Verifícalo en tu sistema:</b> SPRO, definición de variantes de ejercicio; tablas <code>T009</code> y <code>T009B</code>.</p>'},
+  {h:'Caso práctico: importe a pagar de una factura',b:'<p>Pongamos todo junto con una factura de proveedor con IVA y retención.</p>'+K(`
+REPORT zfi_caso_factura.
+
+DATA lv_base  TYPE p LENGTH 8 DECIMALS 2 VALUE '1250.50'.
+DATA lv_iva   TYPE p LENGTH 8 DECIMALS 2.
+DATA lv_ret   TYPE p LENGTH 8 DECIMALS 2.
+DATA lv_total TYPE p LENGTH 8 DECIMALS 2.
+
+lv_iva   = lv_base * '0.21'.             " IVA 21 %
+lv_ret   = lv_base * '0.15'.             " retención 15 %
+lv_total = lv_base + lv_iva - lv_ret.    " importe a pagar
+
+WRITE: / 'Base:', lv_base,
+       / 'IVA:', lv_iva,
+       / 'Retención:', lv_ret,
+       / 'A pagar:', lv_total.`)+'<p>Resultado razonado (no ejecutado): IVA 262,61, retención 187,58 y a pagar 1.325,53. La base por 21 % da 262,605 y por 15 % da 187,575; ambos suben al céntimo siguiente al redondear.</p>'},
+  {h:'Convenciones de nombres',b:'<p>Los nombres delatan el alcance del dato. Cuando el desarrollador dice «el <i>lt_</i>», ya sabes que habla de una tabla interna.</p><div class="tw"><table><tr><th>Prefijo</th><th>Significa</th></tr><tr><td><code>lv_</code> / <code>gv_</code></td><td>Variable local / global</td></tr><tr><td><code>ls_</code> / <code>lt_</code></td><td>Estructura / tabla interna local</td></tr><tr><td><code>lo_</code></td><td>Objeto (instancia de una clase)</td></tr><tr><td><code>iv_ ev_ cv_ rv_</code></td><td>Parámetro importing / exporting / changing / returning</td></tr><tr><td><code>Z…</code> o <code>Y…</code></td><td>Objeto propio del cliente (espacio de nombres)</td></tr></table></div>'}
+ ],
+ vocab:[['declarar','Reservar una variable con su tipo'],['literal','Valor escrito directamente en el código (\'ABC\', 42)'],['sentencia','Una instrucción, acabada en punto'],['programa Z','Programa propio del cliente, no estándar'],['report','Programa ejecutable con pantalla de selección'],['truncar','Cortar el valor por no caber en la variable'],['elemento de datos','Tipo del Diccionario (SE11) con etiquetas y dominio'],['dominio','Tipo técnico y longitud detrás de un elemento de datos'],['ALPHA','Rutina que añade o quita ceros a la izquierda'],['redondeo comercial','El 0,5 sube al valor siguiente']],
+ predict:[
+  {code:`
+DATA lv_a TYPE i VALUE 7.
+DATA lv_b TYPE i.
+lv_b = lv_a / 2.
+WRITE lv_b.`,q:'¿Qué muestra WRITE?',o:['3','3,5','4','Dump por división'],a:2,why:'7 / 2 = 3,5 y al asignarlo a un entero se redondea comercialmente a 4. Con DIV el resultado sería 3.'},
+  {code:`
+DATA lv_c TYPE c LENGTH 3.
+lv_c = 'ABCDEF'.
+WRITE lv_c.`,q:'¿Qué ocurre?',o:['Muestra ABC','Muestra ABCDEF','Dump','Error de sintaxis'],a:0,why:'Un campo c de longitud 3 corta el valor sin avisar. Es un origen típico de datos «raros» en interfaces.'},
+  {code:`
+DATA lv_n TYPE n LENGTH 5 VALUE '42'.
+WRITE lv_n.`,q:'¿Qué muestra WRITE?',o:['42','00042','42   ','Dump'],a:1,why:'El tipo n rellena con ceros a la izquierda. Por eso los números de documento aparecen como 0100000001.'},
+  {code:`
+DATA lv_p TYPE p LENGTH 8 DECIMALS 2.
+lv_p = 10 / 3.
+WRITE lv_p.`,q:'¿Qué valor contiene lv_p?',o:['3','3,33','3,34','Dump'],a:1,why:'El resultado 3,3333… se redondea a 2 decimales: 3,33. El separador decimal depende del perfil del usuario.'},
+  {code:`
+DATA lv_c TYPE c LENGTH 5 VALUE 'AB'.
+IF lv_c = 'AB'.
+  WRITE 'igual'.
+ELSE.
+  WRITE 'distinto'.
+ENDIF.`,q:'¿Qué muestra?',o:['igual','distinto','Dump','Error de sintaxis'],a:0,why:'Los campos c se rellenan con espacios y, al comparar, se ignoran los espacios finales.'},
+  {code:`
+DATA lv_f TYPE d VALUE '20260131'.
+lv_f = lv_f + 1.`,q:'¿Qué fecha contiene lv_f?',o:['31.01.2026','01.02.2026','20260132','Dump'],a:1,why:'Sumar días a un tipo d sigue el calendario: 20260201, que el usuario ve como 01.02.2026 en formato día-mes-año.'},
+  {code:`
+DATA lv_x TYPE p LENGTH 8 DECIMALS 2.
+lv_x = '1250.50' * '0.21'.`,q:'1250,50 por 0,21 da 262,605. ¿Qué valor queda en lv_x?',o:['262,60','262,61','262,605','Dump'],a:1,why:'Al guardar en un campo con 2 decimales se redondea comercialmente: el 5 sube y queda 262,61.'}
+ ],
+ exercise:[
+  {title:'Ejercicio 1: calcular el IVA',kind:'code',
+  brief:['Declara una base imponible de tipo <code>p</code> con 2 decimales y valor 1000.','Declara otra variable para el IVA, también <code>p</code> con 2 decimales.','Calcula el 21 % y muéstralo con <code>WRITE</code>.'],
+  starter:'REPORT zfi_ejercicio1.\n\n',
+  checks:[
+   {t:'Declaras una variable tipo p con 2 decimales',f:function(nc){return /\bdata\b[^.]*\btype\s+p\b[^.]*\bdecimals\s+2\b/i.test(nc);},h:'Prueba con DATA lv_base TYPE p LENGTH 8 DECIMALS 2.'},
+   {t:'Calculas el 21 % con \'0.21\' o 21 / 100',f:function(nc){return /'0\.21'|\b21\s*\/\s*100\b/.test(nc);},h:'Usa lv_base * \'0.21\' o lv_base * 21 / 100.'},
+   {t:'No escribes 0.21 sin comillas',f:function(nc){return !/\b0\.\d+/.test(litless(nc));},h:'ABAP no admite decimales sin comillas: da error de sintaxis.'},
+   {t:'Usas una multiplicación',f:function(nc){return /\S\s*\*\s*\S/.test(litless(nc));},h:'El IVA es base * tipo.'},
+   {t:'Muestras el resultado con WRITE',f:function(nc){return /\bwrite\b/i.test(nc);},h:'WRITE: / lv_iva.'},
+   PUNCT],
+  solution:`
+REPORT zfi_ejercicio1.
+
+DATA lv_base TYPE p LENGTH 8 DECIMALS 2 VALUE 1000.
+DATA lv_iva  TYPE p LENGTH 8 DECIMALS 2.
+
+lv_iva = lv_base * '0.21'.
+WRITE: / 'IVA:', lv_iva.`},
+  {title:'Ejercicio 2: importe a pagar de una factura',kind:'code',
+  brief:['Declara cuatro variables <code>p</code> con 2 decimales: base (valor <code>\'1250.50\'</code>), IVA, retención y total.','Calcula el IVA al 21 % y la retención al 15 % sobre la base.','Calcula el total como base más IVA menos retención y muéstralo con <code>WRITE</code>.'],
+  starter:'REPORT zfi_ejercicio1b.\n\n',
+  checks:[
+   {t:'Declaras al menos 4 variables p con 2 decimales',f:function(nc){var t=litless(nc);return (t.match(/\bdata\b[^.]*?\btype\s+p\b[^.]*?\bdecimals\s+2\b/gi)||[]).length>=4;},h:'Una línea DATA … TYPE p LENGTH 8 DECIMALS 2 por cada variable.'},
+   {t:'Calculas el 21 % de IVA',f:function(nc){return /'0\.21'|\b21\s*\/\s*100\b/.test(nc);},h:'lv_iva = lv_base * \'0.21\'.'},
+   {t:'Calculas el 15 % de retención',f:function(nc){return /'0\.15'|\b15\s*\/\s*100\b/.test(nc);},h:'lv_ret = lv_base * \'0.15\'.'},
+   {t:'El total es base + IVA - retención',f:function(nc){return /=\s*\w+\s+\+\s+\w+\s+-\s+\w+/.test(litless(nc));},h:'lv_total = lv_base + lv_iva - lv_ret.'},
+   {t:'No escribes decimales sin comillas',f:function(nc){return !/\b0\.\d+/.test(litless(nc));},h:'Los decimales van entre comillas simples.'},
+   {t:'Muestras el total con WRITE',f:function(nc){return /\bwrite\b/i.test(nc);},h:'WRITE: / \'A pagar:\', lv_total.'},
+   PUNCT],
+  solution:`
+REPORT zfi_ejercicio1b.
+
+DATA lv_base  TYPE p LENGTH 8 DECIMALS 2 VALUE '1250.50'.
+DATA lv_iva   TYPE p LENGTH 8 DECIMALS 2.
+DATA lv_ret   TYPE p LENGTH 8 DECIMALS 2.
+DATA lv_total TYPE p LENGTH 8 DECIMALS 2.
+
+lv_iva   = lv_base * '0.21'.
+lv_ret   = lv_base * '0.15'.
+lv_total = lv_base + lv_iva - lv_ret.
+
+WRITE: / 'A pagar:', lv_total.`},
+  {title:'Ejercicio 3: fecha de vencimiento',kind:'code',
+  brief:['Declara <code>lv_fecha</code> y <code>lv_venc</code> de tipo <code>d</code>, y <code>lv_dias</code> de tipo <code>i</code>.','Pon en <code>lv_fecha</code> la fecha de hoy (<code>sy-datum</code>).','Calcula el vencimiento a 30 días y los días entre ambas fechas.','Muestra el vencimiento y los días con <code>WRITE</code>.'],
+  starter:'REPORT zfi_ejercicio1c.\n\n',
+  checks:[
+   {t:'Declaras campos de tipo d',f:function(nc){return /\bdata\b[^.]*\btype\s+d\b/i.test(nc);},h:'DATA lv_fecha TYPE d.'},
+   {t:'Declaras un entero (i) para los días',f:function(nc){return /\bdata\b[^.]*\btype\s+i\b/i.test(nc);},h:'DATA lv_dias TYPE i.'},
+   {t:'Usas sy-datum',f:function(nc){return /sy-datum/i.test(nc);},h:'lv_fecha = sy-datum.'},
+   {t:'Sumas 30 días',f:function(nc){return /\+\s*30\b/.test(nc);},h:'lv_venc = lv_fecha + 30.'},
+   {t:'Calculas la diferencia entre dos fechas',f:function(nc){return /=\s*\w+\s+-\s+\w+/.test(nc);},h:'lv_dias = lv_venc - lv_fecha.'},
+   {t:'Muestras el resultado con WRITE',f:function(nc){return /\bwrite\b/i.test(nc);},h:'WRITE: / lv_venc, lv_dias.'},
+   PUNCT],
+  solution:`
+REPORT zfi_ejercicio1c.
+
+DATA lv_fecha TYPE d.
+DATA lv_venc  TYPE d.
+DATA lv_dias  TYPE i.
+
+lv_fecha = sy-datum.
+lv_venc  = lv_fecha + 30.
+lv_dias  = lv_venc - lv_fecha.
+
+WRITE: / 'Vencimiento:', lv_venc, / 'Días:', lv_dias.`},
+  {title:'Ejercicio 4: número de documento sin ceros',kind:'code',
+  brief:['Declara <code>lv_belnr</code> como texto de 10 caracteres con valor <code>\'0000012345\'</code>.','Copia el valor a una variable <code>string</code> y quítale los ceros iniciales con <code>SHIFT … DELETING LEADING</code> (o con <code>ALPHA = OUT</code>).','Muestra el resultado con <code>WRITE</code>.'],
+  starter:'REPORT zfi_ejercicio1d.\n\n',
+  checks:[
+   {t:'Declaras lv_belnr como texto de 10 caracteres',f:function(nc){return /\bdata\b[^.]*\btype\s+c\b[^.]*\blength\s+10\b/i.test(nc)||/\bdata\b[^.]*\btype\s+belnr_d\b/i.test(nc);},h:'DATA lv_belnr TYPE c LENGTH 10 VALUE \'0000012345\'.'},
+   {t:'Usas una variable string',f:function(nc){return /\bdata\b[^.]*\btype\s+string\b/i.test(nc);},h:'DATA lv_corto TYPE string.'},
+   {t:'Quitas los ceros (SHIFT … DELETING LEADING o ALPHA = OUT)',f:function(nc){return /\bshift\b[^.]*\bdeleting\s+leading\b/i.test(nc)||/alpha\s*=\s*out/i.test(nc);},h:'SHIFT lv_corto LEFT DELETING LEADING \'0\'.'},
+   {t:'Muestras el resultado con WRITE',f:function(nc){return /\bwrite\b/i.test(nc);},h:'WRITE: / lv_corto.'},
+   PUNCT],
+  solution:`
+REPORT zfi_ejercicio1d.
+
+DATA lv_belnr TYPE c LENGTH 10 VALUE '0000012345'.
+DATA lv_corto TYPE string.
+
+lv_corto = lv_belnr.
+SHIFT lv_corto LEFT DELETING LEADING '0'.
+WRITE: / 'Sin ceros:', lv_corto.`}
+ ],
+ quiz:[
+  {q:'Necesitas guardar un importe con 2 decimales. ¿Qué tipo eliges?',o:['i','c LENGTH 10','p DECIMALS 2','d'],a:2,why:'p guarda decimales exactos. i no admite decimales y c los trataría como texto.'},
+  {q:'¿Qué hace lv_x = \'ABCDE\' si lv_x es TYPE c LENGTH 3?',o:['Dump por desbordamiento','Guarda ABC y sigue sin avisar','Guarda ABCDE','Error de sintaxis'],a:1,why:'Los campos c se truncan en silencio.'},
+  {q:'¿Cómo se escribe un comentario de línea completa?',o:['// texto','* en la primera columna','-- texto','# texto'],a:1,why:'También sirve " para comentar desde un punto de la línea hasta el final.'},
+  {q:'¿Qué campo de las posiciones del documento (BSEG) guarda el importe en la moneda del documento?',o:['WRBTR','DMBTR','HWAER','BUKRS'],a:0,why:'WRBTR es el importe en moneda del documento; DMBTR, en moneda local. HWAER es la clave de moneda local.'},
+  {q:'¿Cuál es una forma segura de escribir el 21 % en un cálculo?',o:['0.21','\'0.21\' (con comillas)','0,21','21%'],a:1,why:'ABAP no admite decimales sin comillas. También sirve 21 / 100.'},
+  {q:'¿Por qué el número de documento (BELNR) se declara como texto y no como entero?',o:['Porque es demasiado grande','Porque es un identificador con ceros a la izquierda con el que no se opera','Porque ABAP no tiene enteros','Porque ocupa menos'],a:1,why:'Se trata como código, no como cantidad. Por eso conserva los ceros.'},
+  {q:'El usuario escribe el proveedor 1000234 y el programa lo compara como texto con \'0001000234\'. ¿Qué ocurre?',o:['Coinciden siempre','No coinciden si no se convierte con ALPHA','Dump','Se ignoran los ceros automáticamente'],a:1,why:'La conversión automática ocurre en pantallas con elementos de datos que la tienen. En comparaciones dentro del código hay que hacerla explícita.'}
+ ]
+});
+
+MODS.push({
+ id:2,title:'Control de flujo',sub:'Condiciones y bucles',
+ why:'Cada regla de negocio que redactas («si la sociedad es X y el importe es negativo…») acaba como un IF o un CASE. Saber leerlos te permite validar la lógica sin esperar a las pruebas.',
+ lesson:[
+  {h:'IF, ELSEIF, ELSE y CASE',b:K(`
+IF lv_importe > 0.
+  lv_tipo = 'Cargo'.
+ELSEIF lv_importe < 0.
+  lv_tipo = 'Abono'.
+ELSE.
+  lv_tipo = 'Cero'.
+ENDIF.
+
+CASE lv_blart.
+  WHEN 'KR' OR 'KG'.
+    lv_clase = 'Proveedor'.
+  WHEN 'DR'.
+    lv_clase = 'Cliente'.
+  WHEN OTHERS.
+    lv_clase = 'Otro'.
+ENDCASE.`)+'<p>Operadores: <code>=</code> <code>&lt;&gt;</code> <code>&gt;</code> <code>&lt;</code> (también <code>EQ NE GT LT</code>), <code>AND OR NOT</code>, <code>BETWEEN</code>, <code>IN</code> (rango), <code>IS INITIAL</code>, <code>CS</code> (contiene cadena), <code>CP</code> (patrón con *).</p>'},
+  {h:'Valor inicial no es nulo',b:'<p>Toda variable nace con su <b>valor inicial</b>: 0 en números, espacios en texto, <code>00000000</code> en fechas. <code>IS INITIAL</code> pregunta si tiene ese valor. Un importe 0 es «inicial», aunque sea un dato válido: ojo al redactar una regla de «campo vacío».</p>'},
+  {h:'Bucles',b:K(`
+DO 3 TIMES.
+  WRITE sy-index.          " 1, 2, 3
+ENDDO.
+
+WHILE lv_saldo > 0.
+  lv_saldo = lv_saldo - 100.
+ENDWHILE.
+
+LOOP AT lt_pos INTO ls_pos.   " recorre una tabla interna
+  CHECK ls_pos-wrbtr > 0.     " si no se cumple, pasa a la siguiente fila
+ENDLOOP.`)+'<ul><li><code>EXIT</code> sale del bucle. <code>CONTINUE</code> salta a la siguiente vuelta. <code>CHECK</code> es un «continuar si…».</li><li><code>RETURN</code> sale del bloque de procesamiento actual.</li></ul>'},
+  {h:'Campos del sistema (sy-)',b:'<div class="tw"><table><tr><th>Campo</th><th>Contiene</th></tr><tr><td><code>sy-subrc</code></td><td>Resultado de la última operación: 0 = bien, distinto de 0 = algo no ocurrió</td></tr><tr><td><code>sy-index</code></td><td>Vuelta actual de DO / WHILE (empieza en 1)</td></tr><tr><td><code>sy-tabix</code></td><td>Posición de la fila en LOOP AT / READ TABLE</td></tr><tr><td><code>sy-uname</code>, <code>sy-datum</code>, <code>sy-uzeit</code>, <code>sy-mandt</code></td><td>Usuario, fecha, hora y mandante</td></tr></table></div>'},
+  {h:'Mensajes',b:'<p>Con <code>MESSAGE</code> se avisa al usuario. El <b>tipo</b> lo cambia todo: <code>S</code> éxito (barra de estado), <code>I</code> ventana informativa, <code>W</code> aviso, <code>E</code> error (bloquea en pantalla), <code>A</code> cancelación, <code>X</code> volcado (dump).</p>'+K(`
+IF lv_texto IS INITIAL.
+  MESSAGE 'El texto es obligatorio' TYPE 'E'.
+ENDIF.`)+'<p>En una especificación indica siempre el tipo de mensaje y el texto exacto.</p>'}
+ ],
+ vocab:[['sy-subrc','Código de retorno de la última sentencia'],['inicial','Valor por defecto de un tipo (0, espacios…)'],['loop','Bucle sobre filas de una tabla'],['romper el bucle','EXIT: salir antes de terminar'],['mensaje E / W / I','Error / aviso / información']],
+ predict:[
+  {code:`
+DATA lv_sum TYPE i.
+DO 3 TIMES.
+  lv_sum = lv_sum + sy-index.
+ENDDO.
+WRITE lv_sum.`,q:'¿Qué muestra WRITE?',o:['3','6','0','Un bucle infinito'],a:1,why:'sy-index vale 1, 2 y 3 en cada vuelta. Suma 6.'},
+  {code:`
+DATA lv_n TYPE i.
+IF lv_n IS INITIAL.
+  WRITE 'vacío'.
+ELSE.
+  WRITE 'con valor'.
+ENDIF.`,q:'¿Qué muestra?',o:['vacío','con valor','Dump por variable no informada','Nada'],a:0,why:'Un entero sin valor es 0, que es su valor inicial.'},
+  {code:`
+DO 5 TIMES.
+  IF sy-index = 2.
+    CONTINUE.
+  ENDIF.
+  IF sy-index = 4.
+    EXIT.
+  ENDIF.
+  WRITE sy-index.
+ENDDO.`,q:'¿Qué valores de sy-index se escriben?',o:['1 y 3','1, 2 y 3','1, 3 y 4','1, 3 y 5'],a:0,why:'En la vuelta 2 salta a la siguiente; en la 4 sale del bucle. Se escriben 1 y 3.'}
+ ],
+ exercise:{kind:'code',
+  brief:['Declara <code>lv_importe</code> y <code>lv_tipo</code> (texto).','Si el importe es positivo, el tipo es <code>\'Cargo\'</code>; si es negativo, <code>\'Abono\'</code>; si es cero, <code>\'Cero\'</code>.','Escribe el tipo con <code>WRITE</code>.'],
+  starter:'REPORT zfi_ejercicio2.\n\nDATA lv_importe TYPE p LENGTH 8 DECIMALS 2 VALUE -50.\n',
+  checks:[
+   {t:'Declaras las variables con DATA',f:function(nc){return /\bdata\b/i.test(nc);},h:'Falta declarar lv_tipo.'},
+   {t:'Usas IF … ENDIF',f:function(nc){return /\bif\b[\s\S]*\bendif\b/i.test(nc);},h:'Estructura: IF … ELSEIF … ELSE … ENDIF.'},
+   {t:'Cubres los tres casos (ELSEIF y ELSE)',f:function(nc){return /\belseif\b/i.test(nc)&&/\belse\b/i.test(nc);},h:'Necesitas ELSEIF para el negativo y ELSE para el cero.'},
+   {t:'Comparas con > y con <',f:function(nc){return /[^<-]>|\bgt\b/i.test(nc)&&/<(?!>)|\blt\b/i.test(nc);},h:'Un caso usa > 0 y otro < 0.'},
+   {t:'Aparecen los textos Cargo, Abono y Cero',f:function(nc){return /'[^']*cargo[^']*'/i.test(nc)&&/'[^']*abono[^']*'/i.test(nc)&&/'[^']*cero[^']*'/i.test(nc);},h:'Escríbelos entre comillas simples.'},
+   {t:'Muestras el resultado con WRITE',f:function(nc){return /\bwrite\b/i.test(nc);},h:'WRITE lv_tipo.'},
+   PUNCT],
+  solution:`
+REPORT zfi_ejercicio2.
+
+DATA lv_importe TYPE p LENGTH 8 DECIMALS 2 VALUE -50.
+DATA lv_tipo    TYPE string.
+
+IF lv_importe > 0.
+  lv_tipo = 'Cargo'.
+ELSEIF lv_importe < 0.
+  lv_tipo = 'Abono'.
+ELSE.
+  lv_tipo = 'Cero'.
+ENDIF.
+
+WRITE lv_tipo.`},
+ quiz:[
+  {q:'Tras una operación que ha ido bien, sy-subrc vale…',o:['0','1','4','8'],a:0,why:'0 significa éxito. Cualquier otro valor indica que no se cumplió (por ejemplo 4: no encontrado).'},
+  {q:'¿Con qué valor empieza sy-index en un DO?',o:['0','1','Depende del DO','No existe en un DO'],a:1,why:'Empieza en 1.'},
+  {q:'¿Qué tipo de mensaje provoca un volcado (dump) a propósito?',o:['E','W','A','X'],a:3,why:'X termina con el dump MESSAGE_TYPE_X. E solo bloquea el flujo.'}
+ ]
+});
+
+MODS.push({
+ id:3,title:'Estructuras y tablas internas',sub:'Listas de datos en memoria',
+ why:'Casi toda la lógica ABAP trabaja con tablas internas: la lista de partidas, la de proveedores, la salida del informe. Es el vocabulario que más oirás.',
+ lesson:[
+  {h:'Estructura: una fila',b:'<p>Una estructura agrupa campos, como una fila de BKPF o BSEG. Se define con <code>TYPES</code> y se usa con <code>DATA</code>. Se accede a cada campo con guion: <code>ls_pos-wrbtr</code>.</p>'+K(`
+TYPES: BEGIN OF ty_pos,
+         belnr TYPE belnr_d,
+         wrbtr TYPE wrbtr,
+       END OF ty_pos.
+
+DATA ls_pos TYPE ty_pos.
+ls_pos-belnr = '0100000001'.
+ls_pos-wrbtr = 100.`)},
+  {h:'Tabla interna: una lista de filas en memoria',b:K(`
+DATA lt_pos TYPE STANDARD TABLE OF ty_pos WITH EMPTY KEY.
+
+APPEND ls_pos TO lt_pos.                 " añadir al final
+
+LOOP AT lt_pos INTO ls_pos.              " recorrer (copia cada fila)
+  WRITE: / ls_pos-belnr, ls_pos-wrbtr.
+ENDLOOP.
+
+READ TABLE lt_pos INTO ls_pos WITH KEY belnr = '0100000001'.
+IF sy-subrc = 0.
+  " encontrado
+ENDIF.`)+'<div class="tw"><table><tr><th>Tipo de tabla</th><th>Cuándo</th></tr><tr><td><code>STANDARD</code></td><td>Acceso por posición, admite duplicados. Lo habitual.</td></tr><tr><td><code>SORTED</code></td><td>Siempre ordenada por clave; búsqueda binaria automática.</td></tr><tr><td><code>HASHED</code></td><td>Clave única; acceso muy rápido en tablas grandes.</td></tr></table></div>'},
+  {h:'Field symbols: tocar la fila original',b:'<p>Con <code>LOOP AT … INTO ls</code> trabajas sobre una <b>copia</b>; los cambios no vuelven a la tabla. Con un <b>field symbol</b> (<code>&lt;fs&gt;</code>) trabajas sobre la fila real, sin copiar.</p>'+K(`
+LOOP AT lt_pos ASSIGNING FIELD-SYMBOL(<ls_pos>).
+  <ls_pos>-wrbtr = <ls_pos>-wrbtr * 2.   " modifica la tabla
+ENDLOOP.`)},
+  {h:'Otras operaciones frecuentes',b:'<ul><li><code>SORT lt BY campo</code> y <code>DELETE ADJACENT DUPLICATES</code> para ordenar y quitar repetidos.</li><li><code>MODIFY</code>, <code>DELETE</code>, <code>INSERT</code>, <code>CLEAR</code>, <code>REFRESH</code>.</li><li><code>COLLECT</code> suma los campos numéricos de filas con la misma clave.</li><li><code>lines( lt )</code> cuenta filas.</li></ul>'+K(`
+DATA(lt_nuevas) = VALUE ty_t_pos( ( belnr = '0100000001' wrbtr = 100 )
+                                  ( belnr = '0100000002' wrbtr = 250 ) ).
+DATA(ls_primera) = lt_nuevas[ 1 ].`)+'<p class="verify"><b>Código antiguo:</b> verás <code>DATA: BEGIN OF itab OCCURS 0</code> y «tablas con línea de cabecera». Es sintaxis obsoleta que sigue funcionando en programas viejos.</p>'}
+ ],
+ vocab:[['itab','Tabla interna'],['work area / wa','Estructura auxiliar de una fila'],['ty_','Prefijo de un tipo propio (TYPES)'],['field symbol','Puntero a una fila o campo, escrito <fs>'],['header line','Estructura implícita de tablas antiguas'],['ordenar / dedupar','SORT y DELETE ADJACENT DUPLICATES']],
+ predict:[
+  {code:`
+READ TABLE lt_pos INTO ls_pos WITH KEY belnr = 'XXXX'.
+WRITE sy-subrc.`,q:'La tabla no contiene ese documento. ¿Qué muestra WRITE?',o:['0','4','8','Dump'],a:1,why:'No encontrar la fila deja sy-subrc en 4. No es un error: hay que comprobarlo.'},
+  {code:`
+LOOP AT lt_pos INTO ls_pos.
+  ls_pos-wrbtr = 0.
+ENDLOOP.`,q:'Después del bucle, ¿qué importes tiene lt_pos?',o:['Todos a 0','Sin cambios','Solo el último a 0','Dump'],a:1,why:'INTO trabaja con una copia. Para modificar la tabla hace falta ASSIGNING o un MODIFY.'}
+ ],
+ exercise:{kind:'code',
+  brief:['Define un tipo estructura con <code>belnr</code> y <code>wrbtr</code> y una tabla interna <code>STANDARD TABLE OF</code> ese tipo.','Añade dos filas con <code>APPEND</code>.','Recorre la tabla con <code>LOOP AT</code> y suma los importes en <code>lv_total</code>. Muéstralo.'],
+  starter:'REPORT zfi_ejercicio3.\n\n',
+  checks:[
+   {t:'Defines una estructura con TYPES BEGIN OF … END OF',f:function(nc){return /types[\s:]+begin\s+of[\s\S]*end\s+of/i.test(nc);},h:'TYPES: BEGIN OF ty_pos, … END OF ty_pos.'},
+   {t:'Declaras una tabla STANDARD TABLE OF',f:function(nc){return /table\s+of/i.test(nc);},h:'DATA lt_pos TYPE STANDARD TABLE OF ty_pos WITH EMPTY KEY.'},
+   {t:'Añades al menos dos filas',f:function(nc){return (nc.match(/\bappend\b/gi)||[]).length>=2||/value\s+#?\w*\s*\(/i.test(nc);},h:'Dos veces APPEND ls_pos TO lt_pos.'},
+   {t:'Recorres con LOOP AT … ENDLOOP',f:function(nc){return /\bloop\s+at\b[\s\S]*\bendloop\b/i.test(nc);},h:'LOOP AT lt_pos INTO ls_pos. … ENDLOOP.'},
+   {t:'Acumulas el total dentro del bucle',f:function(nc){return /\+=|([\w-]+)\s*=\s*\1\s*\+/i.test(nc);},h:'lv_total = lv_total + ls_pos-wrbtr.'},
+   {t:'Muestras el total con WRITE',f:function(nc){return /\bwrite\b/i.test(nc);},h:'WRITE lv_total.'},
+   PUNCT],
+  solution:`
+REPORT zfi_ejercicio3.
+
+TYPES: BEGIN OF ty_pos,
+         belnr TYPE belnr_d,
+         wrbtr TYPE wrbtr,
+       END OF ty_pos.
+
+DATA lt_pos   TYPE STANDARD TABLE OF ty_pos WITH EMPTY KEY.
+DATA ls_pos   TYPE ty_pos.
+DATA lv_total TYPE wrbtr.
+
+ls_pos-belnr = '0100000001'.
+ls_pos-wrbtr = 100.
+APPEND ls_pos TO lt_pos.
+
+ls_pos-belnr = '0100000002'.
+ls_pos-wrbtr = 250.
+APPEND ls_pos TO lt_pos.
+
+LOOP AT lt_pos INTO ls_pos.
+  lv_total = lv_total + ls_pos-wrbtr.
+ENDLOOP.
+
+WRITE lv_total.`},
+ quiz:[
+  {q:'Tabla enorme y búsquedas siempre por una clave única. ¿Qué tipo conviene?',o:['STANDARD','SORTED','HASHED','Ninguno, mejor un SELECT en cada búsqueda'],a:2,why:'HASHED accede por clave en tiempo casi constante.'},
+  {q:'¿Qué diferencia hay entre LOOP AT … INTO y LOOP AT … ASSIGNING <fs>?',o:['Ninguna','INTO copia la fila; ASSIGNING apunta a la fila real','INTO es más rápido siempre','ASSIGNING solo vale con tablas hashed'],a:1,why:'Con ASSIGNING modificas la tabla directamente y evitas la copia.'},
+  {q:'Tras un READ TABLE, sy-subrc = 4 significa…',o:['Error grave','No se encontró la fila','Se encontró más de una fila','La tabla está vacía siempre'],a:1,why:'Es el código estándar de «no encontrado».'}
+ ]
+});
+
+MODS.push({
+ id:4,title:'Modularización',sub:'Subrutinas, funciones y BAPIs',
+ why:'Los desarrolladores no escriben un programa de 3.000 líneas: lo trocean. Y tú llamarás a BAPIs y módulos de función estándar constantemente en especificaciones de integración.',
+ lesson:[
+  {h:'Cómo se trocea un programa',b:'<div class="tw"><table><tr><th>Técnica</th><th>Qué es</th><th>Uso hoy</th></tr><tr><td>Include</td><td>Fichero de código que se pega en otro programa</td><td>Organización</td></tr><tr><td>Subrutina <code>FORM</code></td><td>Bloque local con <code>PERFORM</code></td><td>Código antiguo; se evita en nuevo</td></tr><tr><td>Módulo de función</td><td>Rutina reutilizable global (SE37)</td><td>Muy extendido, incl. BAPIs</td></tr><tr><td>Método de clase</td><td>Rutina dentro de una clase (SE24)</td><td>Lo recomendado hoy</td></tr></table></div>'},
+  {h:'Subrutinas: FORM y PERFORM',b:K(`
+PERFORM calcular_iva USING lv_base CHANGING lv_iva.
+
+FORM calcular_iva USING iv_base TYPE p
+                  CHANGING cv_iva TYPE p.
+  cv_iva = iv_base * '0.21'.
+ENDFORM.`)+'<p><code>USING</code> entrega datos; <code>CHANGING</code> devuelve resultados. Estas subrutinas no tienen interfaz publicada: solo viven dentro de su programa.</p>'},
+  {h:'Módulos de función y BAPIs',b:'<p>Un módulo de función vive en un <b>grupo de funciones</b> y su interfaz se consulta en <b>SE37</b>: parámetros <code>IMPORTING</code>, <code>EXPORTING</code>, <code>CHANGING</code>, <code>TABLES</code> y <code>EXCEPTIONS</code>. Una <b>BAPI</b> es un módulo de función estándar publicado para uso externo.</p>'+K(`
+CALL FUNCTION 'BAPI_ACC_DOCUMENT_POST'
+  EXPORTING
+    documentheader = ls_header
+  TABLES
+    accountgl      = lt_gl
+    currencyamount = lt_importes
+    return         = lt_return.
+
+READ TABLE lt_return WITH KEY type = 'E' TRANSPORTING NO FIELDS.
+IF sy-subrc <> 0.
+  CALL FUNCTION 'BAPI_TRANSACTION_COMMIT' EXPORTING wait = 'X'.
+ENDIF.`)+'<ul><li>Las BAPIs <b>no hacen commit</b> por sí solas: el programa llama a <code>BAPI_TRANSACTION_COMMIT</code>.</li><li>El éxito o fallo se lee en la tabla <code>RETURN</code> (tipo E o A = fallo).</li></ul><p class="verify"><b>Verifícalo en tu sistema:</b> los nombres exactos de parámetros y estructuras de BAPI_ACC_DOCUMENT_POST en SE37, pestañas Importación, Tablas y Documentación.</p>'},
+  {h:'Valor o referencia',b:'<p>Los parámetros pueden pasar <b>por referencia</b> (el módulo ve la variable original) o <b>por valor</b> (<code>VALUE(...)</code>, trabaja con una copia). Un desarrollador te dirá «lo paso por valor» cuando quiere evitar que se modifique el dato del llamante.</p>'}
+ ],
+ vocab:[['PERFORM','Llamar a una subrutina'],['SE37','Transacción de módulos de función'],['BAPI','Módulo de función estándar publicado'],['RETURN','Tabla de mensajes de resultado'],['commit','Confirmar los cambios en base de datos'],['RFC','Módulo llamable desde otro sistema']],
+ predict:[
+  {code:`
+CALL FUNCTION 'BAPI_ACC_DOCUMENT_POST' ...
+" y el programa termina, sin llamar a BAPI_TRANSACTION_COMMIT`,q:'¿Queda contabilizado el documento?',o:['Sí, siempre','No, los cambios se descartan al terminar','Sí, pero con estado «preliminar»','Depende de la sociedad'],a:1,why:'Sin commit, los cambios pendientes no se confirman. Es una causa típica de «la BAPI dice OK pero no hay documento».'},
+  {code:`
+FORM suma USING a TYPE i b TYPE i CHANGING c TYPE i.
+  c = a + b.
+ENDFORM.
+...
+DATA r TYPE i.
+PERFORM suma USING 2 3 CHANGING r.
+WRITE r.`,q:'¿Qué muestra WRITE?',o:['0','2','3','5'],a:3,why:'La subrutina devuelve la suma en c, que es la variable r del llamante.'}
+ ],
+ exercise:{kind:'code',
+  brief:['Crea una subrutina <code>calcular_iva</code> con <code>FORM … ENDFORM</code>, que reciba la base con <code>USING</code> y devuelva el IVA con <code>CHANGING</code>.','Llámala con <code>PERFORM</code> y escribe el resultado.'],
+  starter:'REPORT zfi_ejercicio4.\n\nDATA lv_base TYPE p LENGTH 8 DECIMALS 2 VALUE 1000.\nDATA lv_iva  TYPE p LENGTH 8 DECIMALS 2.\n',
+  checks:[
+   {t:'Defines FORM … ENDFORM',f:function(nc){return /\bform\b[\s\S]*\bendform\b/i.test(nc);},h:'FORM nombre USING … CHANGING … ENDFORM.'},
+   {t:'Usas USING y CHANGING',f:function(nc){return /\busing\b/i.test(nc)&&/\bchanging\b/i.test(nc);},h:'Base por USING, resultado por CHANGING.'},
+   {t:'Calculas con * dentro del FORM',f:function(nc){return /\bform\b[\s\S]*\S\s*\*\s*\S[\s\S]*\bendform\b/i.test(litless(nc));},h:'cv_iva = iv_base * \'0.21\'.'},
+   {t:'Llamas con PERFORM',f:function(nc){return /\bperform\s+\w+/i.test(nc);},h:'PERFORM calcular_iva USING lv_base CHANGING lv_iva.'},
+   {t:'Muestras el resultado',f:function(nc){return /\bwrite\b/i.test(nc);},h:'WRITE lv_iva.'},
+   PUNCT],
+  solution:`
+REPORT zfi_ejercicio4.
+
+DATA lv_base TYPE p LENGTH 8 DECIMALS 2 VALUE 1000.
+DATA lv_iva  TYPE p LENGTH 8 DECIMALS 2.
+
+PERFORM calcular_iva USING lv_base CHANGING lv_iva.
+WRITE: / 'IVA:', lv_iva.
+
+FORM calcular_iva USING iv_base TYPE p
+                  CHANGING cv_iva TYPE p.
+  cv_iva = iv_base * '0.21'.
+ENDFORM.`},
+ quiz:[
+  {q:'¿En qué transacción se consulta la interfaz de un módulo de función?',o:['SE38','SE37','SE11','SM37'],a:1,why:'SE38 edita programas, SE11 el diccionario y SM37 los jobs.'},
+  {q:'Tras llamar a una BAPI, ¿qué tabla revisa el desarrollador para saber si falló?',o:['BKPF','SYST','RETURN','LOG'],a:2,why:'RETURN lleva los mensajes; un tipo E o A indica fallo.'},
+  {q:'¿Qué se recomienda hoy en lugar de las subrutinas FORM?',o:['Macros','Includes','Métodos de clase','Más variables globales'],a:2,why:'Los métodos permiten pruebas unitarias y tienen interfaz tipada.'}
+ ]
+});
+
+MODS.push({
+ id:5,title:'Acceso a datos',sub:'SELECT y tablas de FI',
+ why:'Aquí es donde un informe se vuelve lento o devuelve datos incorrectos. Saber leer un SELECT te permite revisar si el filtro, las claves y la tabla elegidas son las que pediste.',
+ lesson:[
+  {h:'Open SQL (ABAP SQL)',b:'<p>ABAP lee la base de datos con <code>SELECT</code>, independiente del motor. El <b>mandante</b> (MANDT) se aplica solo.</p>'+K(`
+SELECT bukrs, belnr, gjahr, budat, blart
+  FROM bkpf
+  WHERE bukrs = @p_bukrs
+    AND gjahr = @p_gjahr
+  INTO TABLE @DATA(lt_bkpf).
+
+IF sy-subrc <> 0.
+  MESSAGE 'No hay documentos' TYPE 'I'.
+ENDIF.
+
+SELECT SINGLE butxt FROM t001
+  WHERE bukrs = @p_bukrs
+  INTO @DATA(lv_nombre).`)+'<ul><li><code>SELECT SINGLE</code>: una fila (si hay más, devuelve una cualquiera: usa la clave completa).</li><li><code>INTO TABLE</code>: todas las filas de golpe.</li><li><code>SELECT … ENDSELECT</code>: bucle fila a fila, más lento.</li><li><code>@</code> delante de una variable: sintaxis moderna (7.40 SP05 o superior); en código antiguo no está.</li></ul>'},
+  {h:'Tablas que ya conoces',b:'<div class="tw"><table><tr><th>Tabla</th><th>Qué guarda</th></tr><tr><td><code>BKPF</code></td><td>Cabecera de documento FI (BUKRS, BELNR, GJAHR)</td></tr><tr><td><code>BSEG</code></td><td>Posiciones del documento</td></tr><tr><td><code>ACDOCA</code></td><td>Universal Journal en S/4HANA, fuente principal de partidas</td></tr><tr><td><code>LFA1</code> / <code>KNA1</code></td><td>Maestro de proveedores / clientes</td></tr><tr><td><code>SKA1</code> / <code>SKB1</code></td><td>Cuentas de mayor (plan / sociedad)</td></tr><tr><td><code>T001</code></td><td>Sociedades</td></tr></table></div><p class="verify"><b>Verifícalo en tu sistema:</b> en S/4HANA muchas tablas de índice (BSIK, BSAK, BSIS…) son vistas de compatibilidad sobre las tablas nuevas. Mira el tipo de objeto en SE11.</p>'},
+  {h:'Cruzar tablas',b:K(`
+SELECT b~bukrs, b~belnr, s~hkont, s~wrbtr
+  FROM bkpf AS b
+  INNER JOIN bseg AS s
+    ON  s~bukrs = b~bukrs
+    AND s~belnr = b~belnr
+    AND s~gjahr = b~gjahr
+  WHERE b~bukrs = @p_bukrs
+  INTO TABLE @DATA(lt_datos).`)+'<p>Si te piden «mostrar proveedor y nombre», el desarrollador hará un JOIN con LFA1 por LIFNR. Conviene que tu especificación nombre la clave de unión.</p>'},
+  {h:'Reglas de rendimiento',b:'<ul><li><b>Nunca un SELECT dentro de un LOOP</b>: miles de llamadas a la base de datos.</li><li>Filtra en el <code>WHERE</code>, no después en ABAP.</li><li>Pide solo los campos que necesitas, evita <code>SELECT *</code>.</li><li>Usa campos clave o índices en el <code>WHERE</code>.</li><li><code>FOR ALL ENTRIES IN tabla</code>: cuidado, <b>si la tabla está vacía, el filtro se ignora y trae todo</b>. El desarrollador debe comprobar antes que no esté vacía.</li></ul>'}
+ ],
+ vocab:[['select','Lectura de base de datos'],['join','Cruce de dos tablas por una clave'],['for all entries','Leer solo lo que coincide con una tabla interna'],['índice','Atajo para buscar rápido por ciertos campos'],['full table scan','Leer toda la tabla por falta de filtro útil'],['pushdown','Hacer el cálculo en la base de datos (HANA)']],
+ predict:[
+  {code:`
+SELECT SINGLE butxt FROM t001
+  WHERE bukrs = '9999'
+  INTO @DATA(lv_nombre).
+WRITE sy-subrc.`,q:'Esa sociedad no existe. ¿Qué muestra WRITE?',o:['0','4','8','Dump'],a:1,why:'Sin filas encontradas, sy-subrc = 4. No hay error visible si nadie lo comprueba.'},
+  {code:`
+" lt_proveedores está vacía
+SELECT lifnr, name1 FROM lfa1
+  FOR ALL ENTRIES IN @lt_proveedores
+  WHERE lifnr = @lt_proveedores-lifnr
+  INTO TABLE @DATA(lt_lfa1).`,q:'¿Qué devuelve?',o:['Ninguna fila','Todas las filas de LFA1 del mandante','Dump','Solo la primera fila'],a:1,why:'Con la tabla guía vacía, la condición con FOR ALL ENTRIES desaparece. Un clásico que dispara el tiempo de ejecución.'}
+ ],
+ exercise:{kind:'code',
+  brief:['Lee de <code>BKPF</code> los campos <code>bukrs</code>, <code>belnr</code>, <code>gjahr</code> y <code>budat</code>.','Filtra por sociedad <code>\'1002\'</code> y ejercicio <code>2026</code>.','Guarda el resultado en una tabla interna con <code>INTO TABLE</code>.','Comprueba <code>sy-subrc</code> y no uses <code>ENDSELECT</code>.'],
+  starter:'REPORT zfi_ejercicio5.\n\n',
+  checks:[
+   {t:'Haces SELECT FROM bkpf',f:function(nc){return /\bselect\b[\s\S]*\bfrom\s+bkpf\b/i.test(nc);},h:'SELECT … FROM bkpf …'},
+   {t:'Filtras por bukrs y gjahr en el WHERE',f:function(nc){return /\bwhere\b[\s\S]*\bbukrs\b/i.test(nc)&&/\bwhere\b[\s\S]*\bgjahr\b/i.test(nc);},h:'WHERE bukrs = \'1002\' AND gjahr = 2026.'},
+   {t:'Usas los valores 1002 y 2026',f:function(nc){return /'1002'/.test(nc)&&/\b2026\b/.test(nc);},h:'Faltan los valores del enunciado.'},
+   {t:'Guardas en tabla con INTO TABLE',f:function(nc){return /\binto\s+table\b/i.test(nc);},h:'… INTO TABLE @DATA(lt_bkpf).'},
+   {t:'Comprueba sy-subrc',f:function(nc){return /sy-subrc/i.test(nc);},h:'IF sy-subrc <> 0.'},
+   {t:'No usas ENDSELECT',f:function(nc){return !/endselect/i.test(nc);},h:'INTO TABLE no necesita ENDSELECT.'},
+   {t:'Buena práctica: no usas SELECT *',opt:true,f:function(nc){return !/select\s+(single\s+)?\*/i.test(nc);},h:'Pide solo los campos necesarios.'},
+   PUNCT],
+  solution:`
+REPORT zfi_ejercicio5.
+
+SELECT bukrs, belnr, gjahr, budat
+  FROM bkpf
+  WHERE bukrs = '1002'
+    AND gjahr = 2026
+  INTO TABLE @DATA(lt_bkpf).
+
+IF sy-subrc <> 0.
+  MESSAGE 'No hay documentos' TYPE 'I'.
+ENDIF.`},
+ quiz:[
+  {q:'¿Por qué es mala idea un SELECT dentro de un LOOP?',o:['No compila','Genera muchas llamadas a la base de datos y es lento','Bloquea las tablas siempre','Solo funciona con SELECT SINGLE'],a:1,why:'Una lectura previa con INTO TABLE y consulta en memoria es mucho más eficiente.'},
+  {q:'¿Qué tabla contiene la cabecera de los documentos contables?',o:['BSEG','BKPF','T001','LFA1'],a:1,why:'BSEG guarda las posiciones.'},
+  {q:'¿Cuándo usas SELECT SINGLE?',o:['Para leer miles de filas','Cuando buscas una fila por su clave completa','Para sumar importes','Nunca, está obsoleto'],a:1,why:'Con clave completa, la fila es única.'}
+ ]
+});
+
+MODS.push({
+ id:6,title:'ABAP orientado a objetos',sub:'Clases, métodos e interfaces',
+ why:'Los BAdIs, las APIs modernas y todo el código nuevo se escriben con clases. Sin esta base, un «implementa la interfaz IF_…» suena a otro idioma.',
+ lesson:[
+  {h:'Clase y objeto',b:'<p>Una <b>clase</b> es la plantilla; un <b>objeto</b> es una copia creada de ella. Se declara en dos partes: <code>DEFINITION</code> (qué ofrece) e <code>IMPLEMENTATION</code> (qué código tiene).</p>'+K(`
+CLASS lcl_iva DEFINITION.
+  PUBLIC SECTION.
+    METHODS calcular
+      IMPORTING iv_base       TYPE wrbtr
+      RETURNING VALUE(rv_iva) TYPE wrbtr.
+ENDCLASS.
+
+CLASS lcl_iva IMPLEMENTATION.
+  METHOD calcular.
+    rv_iva = iv_base * '0.21'.
+  ENDMETHOD.
+ENDCLASS.
+
+START-OF-SELECTION.
+  DATA(lo_iva) = NEW lcl_iva( ).
+  WRITE lo_iva->calcular( 1000 ).`)},
+  {h:'Visibilidad y estático',b:'<ul><li><code>PUBLIC SECTION</code>: accesible desde fuera. <code>PROTECTED</code>: la clase y sus hijas. <code>PRIVATE</code>: solo la clase.</li><li><code>METHODS</code> y <code>DATA</code>: pertenecen a cada objeto. <code>CLASS-METHODS</code> y <code>CLASS-DATA</code>: pertenecen a la clase y se llaman con <code>=&gt;</code>, por ejemplo <code>cl_salv_table=&gt;factory( )</code>.</li><li>Una llamada a un método de un objeto usa <code>-&gt;</code>.</li></ul>'},
+  {h:'Herencia e interfaces',b:K(`
+CLASS lcl_base DEFINITION.
+  PUBLIC SECTION.
+    METHODS validar.
+ENDCLASS.
+
+CLASS lcl_fi DEFINITION INHERITING FROM lcl_base.
+  PUBLIC SECTION.
+    METHODS validar REDEFINITION.
+ENDCLASS.`)+'<p>Una <b>interfaz</b> es una lista de métodos sin código. Quien la implementa se compromete a darles contenido. Los <b>BAdIs nuevos</b> funcionan así: SAP define la interfaz y tú escribes una clase que la implementa.</p>'},
+  {h:'Excepciones',b:K(`
+TRY.
+    lv_ratio = lv_a / lv_b.
+  CATCH cx_sy_zerodivide.
+    MESSAGE 'División por cero' TYPE 'E'.
+ENDTRY.`)+'<p>Capturar una excepción evita el dump. Si nadie la captura, aparece <code>UNCAUGHT_EXCEPTION</code> en ST22.</p>'},
+  {h:'Dónde se ve todo esto',b:'<p><b>SE24</b> (Class Builder) o <b>SE80</b> para clases globales (Z…). Las clases locales (<code>lcl_</code>) viven dentro de un programa. En desarrollo moderno se usa <b>ADT</b>, el editor ABAP para Eclipse.</p>'}
+ ],
+ vocab:[['instanciar','Crear un objeto desde una clase'],['método','Rutina de una clase'],['atributo','Variable de una clase'],['redefinir','Cambiar un método heredado'],['interfaz','Contrato de métodos sin código'],['lcl_ / zcl_','Clase local / global propia']],
+ predict:[
+  {code:`
+DATA lo_iva TYPE REF TO lcl_iva.
+lo_iva->calcular( 1000 ).`,q:'No hay NEW ni CREATE OBJECT. ¿Qué ocurre?',o:['Error de sintaxis','Dump en ejecución: la referencia no apunta a ningún objeto','Devuelve 0','Crea el objeto automáticamente'],a:1,why:'La variable existe pero está sin inicializar. El dump típico es OBJECTS_OBJREF_NOT_ASSIGNED.'},
+  {code:`
+CLASS lcl_a DEFINITION.
+  PRIVATE SECTION.
+    DATA mv_x TYPE i.
+ENDCLASS.
+...
+lo_a->mv_x = 5.   " desde fuera de la clase`,q:'¿Qué ocurre al activar el programa?',o:['Funciona','Error de sintaxis: el atributo es privado','Dump al ejecutar','Se ignora la asignación'],a:1,why:'La visibilidad se comprueba al compilar, antes de ejecutar nada.'}
+ ],
+ exercise:{kind:'code',
+  brief:['Define una clase <code>lcl_iva</code> con un método público <code>calcular</code> que reciba la base (<code>IMPORTING</code>) y devuelva el IVA (<code>RETURNING</code>).','Impleméntala y llama al método a través de un objeto creado con <code>NEW</code>.'],
+  starter:'REPORT zfi_ejercicio6.\n\n',
+  checks:[
+   {t:'Declaras CLASS … DEFINITION … ENDCLASS',f:function(nc){return /\bclass\s+\w+\s+definition\b[\s\S]*\bendclass\b/i.test(nc);},h:'CLASS lcl_iva DEFINITION. … ENDCLASS.'},
+   {t:'Tienes PUBLIC SECTION',f:function(nc){return /\bpublic\s+section\b/i.test(nc);},h:'Sin sección pública no se puede llamar desde fuera.'},
+   {t:'El método usa IMPORTING y RETURNING',f:function(nc){return /\bmethods\b[\s\S]*\bimporting\b[\s\S]*\breturning\b/i.test(nc);},h:'METHODS calcular IMPORTING … RETURNING VALUE(…) TYPE ….'},
+   {t:'Tienes CLASS … IMPLEMENTATION y METHOD … ENDMETHOD',f:function(nc){return /\bclass\s+\w+\s+implementation\b/i.test(nc)&&/\bmethod\s+\w+\b[\s\S]*\bendmethod\b/i.test(nc);},h:'La implementación lleva el cálculo.'},
+   {t:'Creas el objeto con NEW o CREATE OBJECT',f:function(nc){return /\bnew\s+\w+\s*\(|\bcreate\s+object\b/i.test(nc);},h:'DATA(lo_iva) = NEW lcl_iva( ).'},
+   {t:'Llamas al método con ->',f:function(nc){return /->\s*\w+/i.test(nc);},h:'lo_iva->calcular( 1000 ).'},
+   PUNCT],
+  solution:`
+REPORT zfi_ejercicio6.
+
+CLASS lcl_iva DEFINITION.
+  PUBLIC SECTION.
+    METHODS calcular
+      IMPORTING iv_base       TYPE wrbtr
+      RETURNING VALUE(rv_iva) TYPE wrbtr.
+ENDCLASS.
+
+CLASS lcl_iva IMPLEMENTATION.
+  METHOD calcular.
+    rv_iva = iv_base * '0.21'.
+  ENDMETHOD.
+ENDCLASS.
+
+START-OF-SELECTION.
+  DATA(lo_iva) = NEW lcl_iva( ).
+  WRITE lo_iva->calcular( 1000 ).`},
+ quiz:[
+  {q:'¿Qué parte de una clase describe qué métodos ofrece?',o:['DEFINITION','IMPLEMENTATION','CONSTRUCTOR','TRY'],a:0,why:'DEFINITION lista la interfaz; IMPLEMENTATION lleva el código.'},
+  {q:'En un BAdI nuevo, ¿qué escribe el desarrollador?',o:['Una subrutina FORM','Una clase que implementa la interfaz del BAdI','Un include','Un user exit CMOD'],a:1,why:'La definición del BAdI aporta la interfaz; la implementación es una clase.'},
+  {q:'¿Para qué sirve TRY … CATCH?',o:['Repetir un bloque','Capturar una excepción y evitar el dump','Declarar variables','Leer datos'],a:1,why:'Si la excepción se captura, el programa sigue de forma controlada.'}
+ ]
+});
+
+MODS.push({
+ id:7,title:'Ampliaciones',sub:'User exits, BAdIs y extensibilidad',
+ why:'Cuando el estándar no cubre un requisito, lo habitual es ampliarlo. Elegir bien la técnica evita problemas en actualizaciones y es parte de tu criterio funcional.',
+ lesson:[
+  {h:'Primero: no tocar el estándar',b:'<p>Orden de preferencia general, de menos a más invasivo:</p><ol><li><b>Configuración</b> (SPRO / SSCUI).</li><li><b>Validaciones y sustituciones</b> de FI (reglas con condiciones sencillas).</li><li><b>BAdI</b> (punto de extensión con interfaz).</li><li><b>Enhancement</b> implícito o explícito (puntos de inserción en código estándar).</li><li><b>User exit / customer exit</b> (técnica antigua).</li><li><b>Modificación</b> del estándar: último recurso. Pide clave de desarrollador/objeto (SSCR) y se pierde o choca en cada actualización.</li></ol>'},
+  {h:'BAdI: el punto de extensión moderno',b:'<ul><li><b>SE18</b>: definición de un BAdI (qué interfaz y en qué momento).</li><li><b>SE19</b>: implementación (la clase del cliente).</li><li><b>Filtro</b>: el BAdI solo actúa si el valor coincide (por ejemplo, una sociedad).</li><li><b>Uso múltiple</b>: varias implementaciones se ejecutan una detrás de otra; en uso único, solo una.</li></ul>'+K(`
+" Dentro del estándar, así se invoca un BAdI nuevo:
+GET BADI lo_badi.
+CALL BADI lo_badi->validar
+  EXPORTING is_cabecera = ls_cabecera
+  CHANGING  cs_resultado = ls_resultado.`)+'<p class="verify"><b>Verifícalo en tu sistema:</b> existe un BAdI <code>ACC_DOCUMENT</code> asociado a la interfaz de contabilidad. Búscalo en SE18 para ver su interfaz real. Para localizar un BAdI antiguo, el desarrollador suele poner un punto de interrupción en <code>CL_EXITHANDLER=&gt;GET_INSTANCE</code>.</p>'},
+  {h:'User exits y customer exits',b:'<p>Las <b>ampliaciones de cliente</b> (SMOD / CMOD) son el mecanismo antiguo: SAP deja «agujeros» con nombre (por ejemplo <code>EXIT_SAPLxxxx_001</code>) y tú los rellenas desde un proyecto CMOD. Siguen existiendo en muchos sistemas ECC. Las <b>user exits</b> clásicas son subrutinas <code>FORM</code> dentro de includes que SAP deja para modificar.</p>'},
+  {h:'Cómo se amplía en S/4HANA y la nube',b:'<ul><li><b>On-premise</b>: BAdIs y enhancements siguen disponibles; se recomienda «clean core».</li><li><b>Cloud Public Edition</b>: no hay SE18/SE19 clásicos ni user exits. Se usa <b>extensibilidad key user</b> (campos propios, lógica sencilla, formularios) y <b>developer extensibility</b> con <b>ABAP Cloud</b>, que solo permite objetos liberados por SAP.</li><li><b>Side-by-side</b>: la extensión vive aparte, en BTP, y habla con S/4HANA por APIs.</li></ul>'},
+  {h:'Qué debe incluir tu especificación',b:'<ul><li>El <b>momento exacto</b> («al grabar el documento», no «cuando se contabiliza»).</li><li>Los <b>datos disponibles</b> en ese punto y cuáles hay que leer.</li><li>La <b>lógica</b> con ejemplos.</li><li>Qué <b>devuelve</b>: error, aviso, valor modificado.</li><li>Alcance: sociedades, clases de documento, usuarios.</li></ul>'}
+ ],
+ vocab:[['BAdI','Punto de extensión con interfaz'],['enhancement spot','Contenedor de puntos de extensión'],['user exit','Ampliación antigua mediante FORM'],['customer exit','Ampliación antigua mediante CMOD'],['modificación','Cambio directo del código estándar'],['clean core','Dejar el estándar intacto y extender con APIs']],
+ predict:[
+  {code:`Cliente en S/4HANA Cloud Public Edition pide:
+"Crea un proyecto CMOD con EXIT_SAPLxxxx_001".`,q:'¿Es posible?',o:['Sí, igual que en ECC','No, hay que usar extensibilidad key user o ABAP Cloud','Sí, con clave SSCUI','Solo si el cliente compra una licencia'],a:1,why:'En la nube pública no se accede a las ampliaciones clásicas. Las extensiones usan objetos liberados.'}
+ ],
+ exercise:{kind:'cases',
+  intro:'Elige la técnica más adecuada para cada situación.',
+  options:['Configuración','Validación o sustitución','BAdI','User exit (CMOD)','Modificación del estándar','Extensibilidad key user','Aplicar una SAP Note'],
+  cases:[
+   {p:'Añadir un campo propio a la cabecera de un documento en S/4HANA Cloud Public Edition.',a:5,why:'Los campos personalizados se crean con key user extensibility sin programar.'},
+   {p:'Bloquear la contabilización si la sociedad es 1002 y el texto de cabecera está vacío (regla simple de campos).',a:1,why:'Una validación de FI cubre reglas con condiciones sencillas sin desarrollo.'},
+   {p:'Calcular un valor propio con lógica compleja al grabar un documento en on-premise y devolver un error al usuario.',a:2,why:'Un BAdI con implementación en una clase es la técnica recomendada.'},
+   {p:'El estándar tiene un fallo conocido y SAP ha publicado una corrección.',a:6,why:'Se aplica la nota con sus correction instructions. No se toca el código a mano.'},
+   {p:'La clase de documento por defecto cambia por sociedad y existe un parámetro en SPRO para ello.',a:0,why:'Si hay configuración estándar, es la primera opción.'}
+  ]},
+ quiz:[
+  {q:'¿En qué transacción se implementa un BAdI?',o:['SE18','SE19','CMOD','SE37'],a:1,why:'SE18 es la definición; SE19 la implementación.'},
+  {q:'¿Qué técnica conviene evitar por su impacto en las actualizaciones?',o:['BAdI','Configuración','Modificación del estándar','Key user extensibility'],a:2,why:'Las modificaciones requieren ajuste manual en cada actualización.'},
+  {q:'En ABAP Cloud, ¿qué objetos estándar se pueden usar?',o:['Cualquiera','Solo los liberados por SAP','Solo tablas Z','Solo los de FI'],a:1,why:'Es la base del enfoque clean core: dependes solo de contratos estables.'}
+ ]
+});
+
+MODS.push({
+ id:8,title:'Informes',sub:'Pantalla de selección, ALV y jobs',
+ why:'Gran parte de lo que pides como funcional es un informe: una pantalla de filtros, una tabla de resultados y, a veces, una ejecución programada. Aquí aprendes cada pieza.',
+ lesson:[
+  {h:'Pantalla de selección',b:K(`
+DATA gs_bkpf TYPE bkpf.
+
+PARAMETERS     p_bukrs TYPE bukrs OBLIGATORY.
+SELECT-OPTIONS s_budat FOR gs_bkpf-budat.
+PARAMETERS     p_test AS CHECKBOX DEFAULT 'X'.`)+'<ul><li><code>PARAMETERS</code>: un valor.</li><li><code>SELECT-OPTIONS</code>: rangos y listas. Internamente es una tabla con <code>SIGN</code> (I/E), <code>OPTION</code> (EQ, BT, CP…), <code>LOW</code> y <code>HIGH</code>.</li><li>Un <code>SELECT-OPTIONS</code> vacío <b>no filtra</b>.</li></ul>'},
+  {h:'Eventos de un report',b:'<div class="tw"><table><tr><th>Evento</th><th>Cuándo ocurre</th></tr><tr><td><code>INITIALIZATION</code></td><td>Antes de mostrar la pantalla de selección (valores por defecto)</td></tr><tr><td><code>AT SELECTION-SCREEN</code></td><td>Al pulsar Intro o ejecutar: validaciones</td></tr><tr><td><code>START-OF-SELECTION</code></td><td>Al ejecutar: lógica principal</td></tr><tr><td><code>END-OF-SELECTION</code></td><td>Al final: normalmente, mostrar resultados</td></tr></table></div>'},
+  {h:'ALV: la tabla interactiva',b:'<p>ALV (SAP List Viewer) es la rejilla con ordenar, filtrar, totales, exportar y variantes de layout. La forma moderna es <code>CL_SALV_TABLE</code>.</p>'+K(`
+START-OF-SELECTION.
+  SELECT belnr, gjahr, budat
+    FROM bkpf
+    WHERE bukrs = @p_bukrs
+      AND budat IN @s_budat
+    INTO TABLE @DATA(lt_bkpf).
+
+  cl_salv_table=>factory(
+    IMPORTING r_salv_table = DATA(lo_alv)
+    CHANGING  t_table      = lt_bkpf ).
+  lo_alv->display( ).`)+'<p>Código antiguo: <code>REUSE_ALV_GRID_DISPLAY</code> y <code>CL_GUI_ALV_GRID</code>, ambos con catálogo de campos (<i>field catalog</i>) escrito a mano.</p>'},
+  {h:'Autorizaciones',b:K(`
+AUTHORITY-CHECK OBJECT 'F_BKPF_BUK'
+  ID 'BUKRS' FIELD p_bukrs
+  ID 'ACTVT' FIELD '03'.
+IF sy-subrc <> 0.
+  MESSAGE 'Sin autorización para la sociedad' TYPE 'E'.
+ENDIF.`)+'<p>Un informe sin <code>AUTHORITY-CHECK</code> deja ver datos a quien no debería. Indica en la especificación qué objeto y qué actividad. <b>03</b> es visualizar.</p>'},
+  {h:'Ejecución en segundo plano',b:'<ul><li><b>SE38</b> / transacción Z: ejecutar un report.</li><li><b>Variante</b>: conjunto guardado de valores de la pantalla de selección.</li><li><b>SM36</b>: programar un job. <b>SM37</b>: monitorizar. Un paso del job es un programa con una variante.</li><li>La salida de un job va a un <b>spool</b>.</li></ul>'}
+ ],
+ vocab:[['pantalla de selección','Filtros previos al informe'],['variante','Selección guardada'],['ALV','Rejilla interactiva de resultados'],['spool','Salida de impresión de un job'],['job','Ejecución programada en segundo plano'],['field catalog','Descripción de columnas de un ALV antiguo']],
+ predict:[
+  {code:`
+" El usuario escribe en s_budat: 01.01.2026 a 31.01.2026
+" ¿Qué valor tiene la línea de s_budat?`,q:'¿Qué OPTION genera un rango «de … a …»?',o:['EQ','BT','CP','GE'],a:1,why:'BT (between) con LOW y HIGH. EQ es un valor único.'},
+  {code:`
+" El usuario deja s_budat vacío.
+SELECT … WHERE budat IN @s_budat …`,q:'¿Qué filas devuelve?',o:['Ninguna','Todas las que cumplan el resto del WHERE','Dump','Solo las de hoy'],a:1,why:'Un SELECT-OPTIONS vacío equivale a «sin restricción».'}
+ ],
+ exercise:{kind:'code',
+  brief:['Pantalla de selección con <code>PARAMETERS p_bukrs</code> (obligatorio).','En <code>START-OF-SELECTION</code> lee de <code>BKPF</code> las cabeceras de esa sociedad con <code>INTO TABLE</code>.','Muestra el resultado con <code>CL_SALV_TABLE</code> y <code>display( )</code>.','Extra: añade un <code>AUTHORITY-CHECK</code>.'],
+  starter:'REPORT zfi_ejercicio8.\n\n',
+  checks:[
+   {t:'Declaras PARAMETERS o SELECT-OPTIONS',f:function(nc){return /\bparameters\b|\bselect-options\b/i.test(nc);},h:'PARAMETERS p_bukrs TYPE bukrs OBLIGATORY.'},
+   {t:'Usas START-OF-SELECTION',f:function(nc){return /start-of-selection/i.test(nc);},h:'La lógica principal va después de este evento.'},
+   {t:'Lees de bkpf con INTO TABLE',f:function(nc){return /\bfrom\s+bkpf\b/i.test(nc)&&/\binto\s+table\b/i.test(nc);},h:'SELECT … FROM bkpf … INTO TABLE @DATA(lt_bkpf).'},
+   {t:'Usas un ALV (CL_SALV_TABLE o REUSE_ALV)',f:function(nc){return /cl_salv_table|reuse_alv_grid_display|cl_gui_alv_grid/i.test(nc);},h:'cl_salv_table=>factory( … ).'},
+   {t:'Lo muestras con display( )',f:function(nc){return /->\s*display\s*\(|reuse_alv_grid_display/i.test(nc);},h:'lo_alv->display( ).'},
+   {t:'Extra: incluyes AUTHORITY-CHECK',opt:true,f:function(nc){return /authority-check/i.test(nc);},h:'Comprueba el objeto F_BKPF_BUK.'},
+   PUNCT],
+  solution:`
+REPORT zfi_ejercicio8.
+
+PARAMETERS p_bukrs TYPE bukrs OBLIGATORY.
+
+START-OF-SELECTION.
+  AUTHORITY-CHECK OBJECT 'F_BKPF_BUK'
+    ID 'BUKRS' FIELD p_bukrs
+    ID 'ACTVT' FIELD '03'.
+  IF sy-subrc <> 0.
+    MESSAGE 'Sin autorización para la sociedad' TYPE 'E'.
+  ENDIF.
+
+  SELECT bukrs, belnr, gjahr, budat
+    FROM bkpf
+    WHERE bukrs = @p_bukrs
+    INTO TABLE @DATA(lt_bkpf).
+
+  cl_salv_table=>factory(
+    IMPORTING r_salv_table = DATA(lo_alv)
+    CHANGING  t_table      = lt_bkpf ).
+  lo_alv->display( ).`},
+ quiz:[
+  {q:'¿Con qué transacción se monitoriza un job?',o:['SM36','SM37','SE38','SM21'],a:1,why:'SM36 lo crea; SM37 lo supervisa.'},
+  {q:'¿Qué guarda internamente un SELECT-OPTIONS?',o:['Un único valor','Una tabla con SIGN, OPTION, LOW y HIGH','Una fecha','Un texto'],a:1,why:'Esa tabla se usa con IN en el WHERE.'},
+  {q:'¿En qué evento se escribe normalmente la lógica principal de un report?',o:['INITIALIZATION','AT SELECTION-SCREEN','START-OF-SELECTION','LOAD-OF-PROGRAM'],a:2,why:'Se dispara al ejecutar tras rellenar la pantalla de selección.'}
+ ]
+});
+
+MODS.push({
+ id:9,title:'Depuración y dumps',sub:'Leer un error de ST22',
+ why:'Cuando algo falla en pruebas, quien aporta el dato correcto ahorra horas. Tras este módulo sabrás leer un volcado y qué enviar al desarrollador.',
+ lesson:[
+  {h:'El debugger',b:'<ul><li>Escribe <code>/h</code> en el campo de comandos y ejecuta la transacción: se abre el depurador en la primera línea.</li><li>Puntos de interrupción: en una línea concreta, en una sentencia (<i>break-point at statement</i>) o en un mensaje.</li><li>Puedes ver variables y tablas internas, el <b>call stack</b> y el valor de <code>sy-subrc</code>, y modificar valores para probar escenarios.</li><li>Un <b>watchpoint</b> detiene el programa cuando una variable cambia o alcanza un valor.</li></ul><p>En entornos productivos el depurador suele estar restringido por autorizaciones. Es una herramienta de desarrollo y calidad.</p>'},
+  {h:'Anatomía de un dump en ST22',b:'<div class="tw"><table><tr><th>Sección</th><th>Qué te dice</th></tr><tr><td>Nombre del error</td><td>Por ejemplo COMPUTE_INT_ZERODIVIDE</td></tr><tr><td>¿Qué ha ocurrido?</td><td>Descripción en lenguaje claro</td></tr><tr><td>Cómo corregir</td><td>Pista del sistema</td></tr><tr><td>Información de contexto</td><td>Usuario, mandante, fecha y hora, programa</td></tr><tr><td>Extracto del código fuente</td><td>La línea que falló, marcada con <code>&gt;&gt;&gt;&gt;&gt;</code></td></tr><tr><td>Contenido de variables</td><td>Valores en el momento del fallo</td></tr><tr><td>Pila de llamadas</td><td>Qué programa llamó a cuál</td></tr></table></div>'},
+  {h:'Dumps que verás con frecuencia',b:'<div class="tw"><table><tr><th>Nombre</th><th>Causa habitual</th></tr><tr><td><code>COMPUTE_INT_ZERODIVIDE</code></td><td>División entre cero</td></tr><tr><td><code>CONVT_NO_NUMBER</code></td><td>Texto no numérico convertido a número</td></tr><tr><td><code>OBJECTS_OBJREF_NOT_ASSIGNED</code></td><td>Objeto no creado</td></tr><tr><td><code>TIME_OUT</code></td><td>Superó el tiempo máximo de diálogo (SELECT sin índice, bucles enormes)</td></tr><tr><td><code>UNCAUGHT_EXCEPTION</code></td><td>Excepción de clase sin capturar</td></tr><tr><td><code>MESSAGE_TYPE_X</code></td><td>Mensaje de tipo X lanzado a propósito</td></tr><tr><td><code>TSV_TNEW_PAGE_ALLOC_FAILED</code></td><td>Sin memoria: tabla interna gigante</td></tr></table></div>'},
+  {h:'Otras transacciones de diagnóstico',b:'<ul><li><b>SM21</b>: log del sistema. <b>SLG1</b>: logs de aplicación (muchos programas Z escriben aquí).</li><li><b>ST05</b>: traza SQL. <b>SAT</b>: traza de rendimiento de ejecución.</li><li><b>SM13</b>: registros de actualización fallidos. <b>SM12</b>: bloqueos.</li></ul>'},
+  {h:'Qué enviar al desarrollador',b:'<ol><li>Nombre del dump y programa.</li><li>Línea marcada con <code>&gt;&gt;&gt;&gt;&gt;</code> y variables relevantes.</li><li>Usuario, mandante, fecha y hora.</li><li>Pasos exactos para reproducirlo y datos de ejemplo (número de documento, sociedad…).</li><li>Qué se esperaba.</li></ol><p>«Da un error» no basta; «dump CONVT_NO_NUMBER en ZFI_INFORME línea 214 con el proveedor 1000234» sí.</p>'}
+ ],
+ vocab:[['dump / volcado','Terminación abrupta con informe en ST22'],['call stack','Cadena de llamadas hasta el fallo'],['breakpoint','Parada del debugger en una línea'],['watchpoint','Parada al cambiar una variable'],['traza','Registro de qué hizo un programa'],['reproducir','Provocar de nuevo el mismo error']],
+ predict:[
+  {code:`Runtime Errors         COMPUTE_INT_ZERODIVIDE
+Programa               ZFI_RATIOS
+Extracto:
+  >>>>> lv_ratio = lv_a / lv_b.`,q:'¿Qué ha fallado?',o:['No hay autorización','lv_b valía 0','Falta una tabla en el sistema','Timeout de la base de datos'],a:1,why:'El nombre ya lo dice: división entera entre cero. Comprueba el valor de lv_b en «Contenido de variables».'}
+ ],
+ exercise:{kind:'cases',
+  intro:'Une cada dump con su causa más probable.',
+  options:['División entre cero','Texto no numérico convertido a número','Objeto sin crear','Tiempo máximo excedido','Excepción de clase sin capturar'],
+  cases:[
+   {p:'COMPUTE_INT_ZERODIVIDE',a:0,why:'Operación / con divisor 0.'},
+   {p:'CONVT_NO_NUMBER',a:1,why:'Por ejemplo, asignar \'ABC\' a un campo numérico.'},
+   {p:'OBJECTS_OBJREF_NOT_ASSIGNED',a:2,why:'Se llamó a un método de una referencia vacía.'},
+   {p:'TIME_OUT',a:3,why:'El proceso de diálogo tardó más del máximo permitido.'},
+   {p:'UNCAUGHT_EXCEPTION',a:4,why:'Alguien lanzó una excepción y nadie la capturó con CATCH.'}
+  ]},
+ quiz:[
+  {q:'¿En qué transacción se consultan los volcados ABAP?',o:['ST22','SM37','SE80','ST05'],a:0,why:'ST22 es «Volcados ABAP».'},
+  {q:'¿Qué escribes en el campo de comandos para iniciar el debugger?',o:['/n','/h','/o','/i'],a:1,why:'/h activa la depuración antes de ejecutar la transacción.'},
+  {q:'¿Qué dato aporta más valor al desarrollador al reportar un dump?',o:['«Está roto»','Captura del dump con el nombre, el programa, la línea y el dato de prueba','Solo la hora','El nombre de tu jefe'],a:1,why:'Con eso puede reproducir y localizar la causa.'}
+ ]
+});
+
+MODS.push({
+ id:10,title:'S/4HANA: CDS y RAP',sub:'ABAP moderno y clean core',
+ why:'S/4HANA trae su propio vocabulario: vistas CDS, RAP, Fiori. Te lo van a decir en cada reunión de diseño; aquí aprendes qué significa y qué implica para tus requisitos.',
+ lesson:[
+  {h:'Code pushdown',b:'<p>HANA calcula muy rápido dentro de la base de datos. La idea es llevar filtros, cruces y agregaciones al SQL, en lugar de traer datos a ABAP y procesarlos en bucles. Las <b>vistas CDS</b> (Core Data Services) son el vehículo principal.</p>'},
+  {h:'Vista CDS',b:K(`
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Documentos FI simples'
+define view entity ZI_FiDoc
+  as select from bkpf
+{
+  key bukrs as CompanyCode,
+  key belnr as AccountingDocument,
+  key gjahr as FiscalYear,
+      budat as PostingDate,
+      blart as DocumentType
+}`)+'<ul><li><code>@…</code>: anotaciones que añaden significado (etiquetas, autorización, semántica de moneda).</li><li><code>association</code>: unión declarada que se resuelve solo si se consulta.</li><li>Un <b>DCL</b> (control de acceso) define quién ve qué filas.</li><li>Convención SAP: <code>I_</code> vista interfaz, <code>C_</code> consumo, <code>R_</code> restringida.</li></ul><p class="verify"><b>Verifícalo en tu sistema:</b> con ADT busca <code>I_JournalEntry</code> e <code>I_JournalEntryItem</code>, vistas liberadas de asientos contables. Son las que usa ABAP Cloud en lugar de leer BKPF/ACDOCA directamente.</p>'},
+  {h:'RAP: modelo de programación',b:'<p><b>RAP</b> (ABAP RESTful Application Programming Model) construye aplicaciones transaccionales sobre CDS. Un <b>objeto de negocio</b> reúne:</p><ol><li>Vistas CDS (el modelo de datos).</li><li>Una <b>definición de comportamiento</b> (BDEF): qué se puede crear, cambiar, borrar y qué validaciones y acciones existen.</li><li>Una clase de implementación del comportamiento.</li><li>Una <b>definición y enlace de servicio</b> (OData V2/V4) que publica el objeto.</li><li>Una app <b>Fiori elements</b> generada sobre ese servicio.</li></ol><ul><li><b>Managed</b>: el framework gestiona persistencia y CRUD; el desarrollador solo programa lo específico.</li><li><b>Unmanaged</b>: el desarrollador implementa todo (se usa para envolver lógica existente).</li><li><b>Draft</b>: borradores guardados mientras el usuario edita.</li></ul>'},
+  {h:'Herramientas y términos de moda',b:'<ul><li><b>ADT</b> (ABAP Development Tools en Eclipse) es obligatorio para CDS y RAP. SE80/SE38 no sirven aquí.</li><li><b>ABAP Cloud</b>: subconjunto del lenguaje con APIs liberadas.</li><li><b>Clean core</b>: el estándar queda intacto, las extensiones usan puntos y APIs liberados.</li><li><b>Released API</b>: objeto SAP con garantía de estabilidad entre versiones.</li></ul>'},
+  {h:'Qué cambia para tu especificación',b:'<ul><li>Pide <b>datos de vistas liberadas</b> en lugar de tablas internas de SAP cuando sea posible.</li><li>Pide filtros en el modelo, no «después en el informe».</li><li>Especifica la app como lista + detalle (Fiori elements) y qué acciones debe tener.</li></ul>'}
+ ],
+ vocab:[['CDS','Vista de datos con SQL y anotaciones'],['RAP','Modelo para apps transaccionales'],['BDEF','Definición de comportamiento'],['managed','El framework gestiona la persistencia'],['Fiori elements','App generada a partir de anotaciones'],['released API','Objeto estable garantizado por SAP']],
+ predict:[
+  {code:`Un desarrollador dice: "Lo monto como un objeto RAP managed."`,q:'¿Qué te está diciendo?',o:['Que lo programará todo desde cero en SE38','Que el framework gestionará lectura, grabación y borrado y él programa solo la lógica específica','Que usará una BAPI antigua','Que no habrá interfaz de usuario'],a:1,why:'Managed significa que el framework implementa la persistencia estándar.'},
+  {code:`"Hacemos code pushdown con una CDS."`,q:'¿Qué significa?',o:['Que se copia el código a otro sistema','Que el cálculo se hace en la base de datos con la vista CDS, no en bucles ABAP','Que se bloquea la tabla','Que se pasa a Fiori'],a:1,why:'Menos datos viajando a la capa de aplicación y más rapidez.'}
+ ],
+ exercise:{kind:'code',
+  brief:['Escribe una vista CDS <code>define view entity ZI_Proveedor</code> sobre <code>lfa1</code>.','Incluye <code>lifnr</code> como clave (<code>key</code>) y los campos <code>name1</code> y <code>land1</code> con alias legibles (por ejemplo <code>Supplier</code>, <code>SupplierName</code>, <code>Country</code>).','Añade la anotación <code>@EndUserText.label</code>.'],
+  starter:'',
+  checks:[
+   {t:'Usas define view entity',f:function(nc){return /\bdefine\s+view\s+entity\b/i.test(nc);},h:'define view entity ZI_Proveedor …'},
+   {t:'Lees de lfa1 con as select from',f:function(nc){return /\bas\s+select\s+from\s+lfa1\b/i.test(nc);},h:'as select from lfa1'},
+   {t:'Declaras lifnr como key',f:function(nc){return /\bkey\s+lifnr\b/i.test(nc);},h:'key lifnr as Supplier,'},
+   {t:'Incluyes name1 y land1',f:function(nc){return /\bname1\b/i.test(nc)&&/\bland1\b/i.test(nc);},h:'Faltan campos.'},
+   {t:'Pones los campos entre llaves { }',f:function(nc){return /\{[\s\S]*\}/.test(nc);},h:'Los campos van dentro de llaves.'},
+   {t:'Usas alias con as',f:function(nc){return /\blifnr\s+as\s+\w+/i.test(nc)&&/\bname1\s+as\s+\w+/i.test(nc);},h:'name1 as SupplierName'},
+   {t:'Añades @EndUserText.label',opt:true,f:function(nc){return /@EndUserText\.label/i.test(nc);},h:'@EndUserText.label: \'Proveedor\''}],
+  solution:`
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Proveedor'
+define view entity ZI_Proveedor
+  as select from lfa1
+{
+  key lifnr as Supplier,
+      name1 as SupplierName,
+      land1 as Country
+}`},
+ quiz:[
+  {q:'¿Qué herramienta es imprescindible para desarrollar CDS y RAP?',o:['SE38','ADT (Eclipse)','SE11 únicamente','SM36'],a:1,why:'Son objetos que solo se editan en ADT.'},
+  {q:'¿Qué significan las siglas RAP?',o:['Rapid Application Platform','ABAP RESTful Application Programming Model','Reporting and Analysis Package','Remote ABAP Procedure'],a:1,why:'Es el modelo recomendado para apps transaccionales en S/4HANA.'},
+  {q:'«Clean core» implica…',o:['Borrar los datos antiguos','No modificar el estándar y extender con APIs liberadas','Programar solo en Z','Usar más user exits'],a:1,why:'Se facilitan actualizaciones y se reduce el coste de mantenimiento.'}
+ ]
+});
+
+MODS.push({
+ id:11,title:'Escribir una buena especificación',sub:'Lo que el desarrollador necesita',
+ why:'Todo lo anterior converge aquí. Una especificación clara reduce idas y venidas, incidencias en pruebas y retrabajos. Este es el módulo donde tu vocabulario ABAP se convierte en resultados.',
+ lesson:[
+  {h:'Estructura mínima',b:'<ol><li><b>Objetivo y contexto</b>: qué proceso de negocio cubre y quién lo usa.</li><li><b>Alcance</b>: sociedades, ejercicios, volumen y frecuencia.</li><li><b>Disparador</b>: transacción, momento o job.</li><li><b>Entradas</b>: campos de la pantalla de selección (tipo, obligatorio, valor por defecto, origen).</li><li><b>Reglas de negocio</b>: numeradas, con campos y tablas por su nombre técnico.</li><li><b>Salida</b>: columnas del ALV, formato del fichero o documento generado.</li><li><b>Errores y mensajes</b>: tipo (E/W/I) y texto exacto.</li><li><b>Autorizaciones</b>: objeto y actividad.</li><li><b>Rendimiento</b>: volumen esperado.</li><li><b>Casos de prueba</b>: datos reales y resultado esperado.</li></ol>'},
+  {h:'Buenas prácticas',b:'<ul><li>Escribe <b>reglas comprobables</b>: «Si BKPF-BLART = \'KR\' y BKPF-BUKRS = \'1002\', el texto de posición no puede estar vacío».</li><li>Incluye <b>un caso feliz y al menos un caso límite</b>.</li><li>Usa <b>nombres técnicos</b> (BUKRS, BELNR, LIFNR). Evita «el proveedor» si hablas del campo.</li><li>Separa <b>qué</b> se necesita de <b>cómo</b> programarlo. Tú defines el requisito; el desarrollador, la solución técnica.</li><li>Indica el entorno: ECC, S/4HANA on-premise o Cloud Public Edition.</li></ul>'},
+  {h:'Frases que generan problemas',b:'<div class="tw"><table><tr><th>Evita</th><th>Escribe</th></tr><tr><td>«Si procede»</td><td>La condición exacta</td></tr><tr><td>«Rápidamente»</td><td>«En menos de 30 s para 100.000 partidas»</td></tr><tr><td>«Etc.»</td><td>La lista completa</td></tr><tr><td>«Los proveedores importantes»</td><td>«Proveedores con saldo superior a 10.000 EUR»</td></tr><tr><td>«Debería mostrar…»</td><td>«Muestra…»</td></tr></table></div>'},
+  {h:'Ejemplo de regla mal y bien escrita',b:'<p><b>Mal:</b> «Que el texto sea obligatorio cuando proceda.»</p><p><b>Bien:</b> «Al grabar un documento de clase KR en la sociedad 1002, si el texto de posición (SGTXT) está vacío, mostrar mensaje de error E: "Introduce un texto de posición" y no contabilizar.»</p>'}
+ ],
+ vocab:[['criterio de aceptación','Condición que demuestra que está bien'],['caso límite','Dato en el borde de una regla'],['caso feliz','Escenario normal sin incidencias'],['spec funcional','Documento del consultor para el desarrollador'],['spec técnica','Documento del desarrollador con la solución'],['UAT','Pruebas de aceptación de usuario']],
+ predict:[
+  {code:`A) Que el texto sea obligatorio cuando proceda.
+B) El sistema debería validar bien los textos.
+C) En clase KR y sociedad 1002, si SGTXT está vacío, error E «Introduce un texto de posición» y no contabilizar.
+D) Validar los documentos importantes rápidamente.`,q:'¿Cuál está mejor escrito para un desarrollador?',o:['A','B','C','D'],a:2,why:'C da condición, campo, tipo de mensaje, texto y resultado. Las demás dejan decisiones al criterio de cada lector.'}
+ ],
+ exercise:{kind:'builder'},
+ quiz:[
+  {q:'¿Qué ayuda más a validar que un requisito está bien entendido?',o:['Un ejemplo con datos reales y resultado esperado','Un párrafo largo','Más adjetivos','Un diagrama sin textos'],a:0,why:'Un ejemplo concreto elimina ambigüedades.'},
+  {q:'¿Cuál de estas palabras suele delatar un requisito ambiguo?',o:['BUKRS','«etc.»','Mensaje tipo E','1002'],a:1,why:'«Etc.» deja abierta una lista que el desarrollador tendría que adivinar.'},
+  {q:'Los casos de prueba de una especificación deben incluir…',o:['Solo el caso feliz','Caso feliz y casos límite con datos concretos','Solo errores','Ninguno: los redacta el desarrollador'],a:1,why:'Los límites son donde suelen aparecer los fallos.'}
+ ]
+});
+
+/* ---------- estado ---------- */
+var KEY='abap-curso-v1';
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{};}catch(e){return {};}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify({prog:P.prog,cur:P.cur,step:P.step}));}catch(e){}}
+var P=load();P.prog=P.prog||{};P.cur=P.cur||1;P.step=(P.step!=null)?P.step:0;
+var M={predict:{},quiz:{},code:{},res:{},cases:{},rev:{},builder:null,exi:{}};
+var STEPS=['Lección','Predice','Ejercicio','Quiz'];
+function pr(m){P.prog[m]=P.prog[m]||{};return P.prog[m];}
+function mark(m,k,v){pr(m)[k]=v;save();}
+function stepDone(m,i){var p=P.prog[m]||{};return i===0?!!p.lesson:i===1?!!p.predict:i===2?!!p.ex:p.quiz!=null;}
+function mod(id){return MODS[id-1];}
+
+/* ---------- barra lateral ---------- */
+function renderSide(){
+  var n=0;MODS.forEach(function(m){for(var i=0;i<4;i++)if(stepDone(m.id,i))n++;});
+  document.getElementById('tot-n').textContent=n+' / 44';
+  document.getElementById('tot-b').style.width=(n/44*100)+'%';
+  document.getElementById('mods').innerHTML=MODS.map(function(m){
+    var dots='';for(var i=0;i<4;i++)dots+='<i class="'+(stepDone(m.id,i)?'on':'')+'"></i>';
+    return '<button class="mod" data-act="go" data-m="'+m.id+'" aria-current="'+(m.id===P.cur)+'"><span class="n">'+m.id+'</span><span class="t">'+esc(m.title)+'</span><span class="dots" aria-hidden="true">'+dots+'</span></button>';
+  }).join('');
+}
+
+var askReset=false;
+function renderReset(){
+  var el=document.getElementById('resetbox');if(!el)return;
+  el.innerHTML=askReset?'<p style="margin:0">¿Borrar todo tu progreso y empezar desde cero?</p><div class="row"><button class="btn sm" data-act="resetYes">Sí, empezar de cero</button><button class="btn ghost sm" data-act="resetNo">Cancelar</button></div>':'<button class="btn ghost sm" data-act="resetAsk">Reiniciar progreso</button>';
+}
+
+/* ---------- paneles ---------- */
+function pLesson(m){
+  var h='<div class="panel">'+m.lesson.map(function(s,i){return '<h3>'+esc(s.h)+'</h3>'+s.b;}).join('');
+  h+='<h3>Cómo lo dice el desarrollador</h3><dl class="vocab">'+m.vocab.map(function(v){return '<dt>'+esc(v[0])+'</dt><dd>'+esc(v[1])+'</dd>';}).join('')+'</dl>';
+  h+='<div class="row"><button class="btn" data-act="lessonDone">Entendido, ir a Predice</button></div></div>';
+  return h;
+}
+function pPredict(m){
+  var st=M.predict[m.id]=M.predict[m.id]||[];
+  var h='<div class="panel"><p><span class="tag">Sin ejecutar</span> Lee el código y elige el resultado antes de comprobarlo. Las respuestas están razonadas, no ejecutadas en un sistema SAP.</p>';
+  m.predict.forEach(function(p,i){
+    var sel=st[i];
+    h+='<div class="card">'+K(p.code)+'<div class="q">'+esc(p.q)+'</div><div class="opts">'+p.o.map(function(o,j){
+      var cls='',dis=sel!=null?' disabled':'';
+      if(sel!=null){if(j===p.a)cls=' ok';else if(j===sel)cls=' bad';}
+      return '<button class="opt'+cls+'"'+dis+' data-act="pick" data-i="'+i+'" data-o="'+j+'">'+esc(o)+'</button>';
+    }).join('')+'</div>';
+    if(sel!=null)h+='<div class="fb '+(sel===p.a?'ok':'bad')+'"><b>'+(sel===p.a?'Correcto. ':'No exactamente. ')+'</b>'+esc(p.why)+'</div>';
+    h+='</div>';
+  });
+  h+='<div class="row"><button class="btn" data-act="step" data-s="2">Ir al ejercicio</button></div></div>';
+  return h;
+}
+function exs(m){return Array.isArray(m.exercise)?m.exercise:[m.exercise];}
+function ci(m){var i=M.exi[m.id]||0;return i<exs(m).length?i:0;}
+function cx(m){return exs(m)[ci(m)];}
+function xk(m){return m.id+':'+ci(m);}
+function dk(m){return m.id+'-'+ci(m);}
+function exDone(m,i){var p=P.prog[m.id]||{};if(p.ex&&!p.exs)return true;return !!(p.exs&&p.exs[i]);}
+function exOk(m){var p=pr(m.id);p.exs=p.exs||{};p.exs[ci(m)]=true;p.ex=exs(m).every(function(e,i){return !!p.exs[i];});save();}
+function runChecks(m){
+  var ex=cx(m),code=M.code[xk(m)]||'',nc=stripComments(code);
+  var res=ex.checks.map(function(c){return {t:c.t,h:c.h,opt:!!c.opt,ok:!!c.f(nc)};});
+  M.res[xk(m)]=res;
+  if(res.every(function(r){return r.ok||r.opt;}))exOk(m);
+}
+function pExercise(m){
+  var list=exs(m),h='<div class="panel">';
+  if(list.length>1)h+='<div class="subtabs">'+list.map(function(e,i){return '<button class="sub'+(i===ci(m)?' on':'')+'" data-act="exsel" data-i="'+i+'">Ejercicio '+(i+1)+(exDone(m,i)?' ✓':'')+'</button>';}).join('')+'</div>';
+  var ex=cx(m),k=xk(m),d=dk(m);
+  if(ex.kind==='code'){
+    if(M.code[k]==null)M.code[k]=ex.starter;
+    h+='<h2>'+esc(ex.title||'Ejercicio')+'</h2><ul>'+ex.brief.map(function(b){return '<li>'+b+'</li>';}).join('')+'</ul>';
+    h+='<label class="f" for="code-'+d+'">Tu código</label><textarea id="code-'+d+'" rows="14" spellcheck="false" data-act-input="code">'+esc(M.code[k])+'</textarea>';
+    h+='<div class="row"><button class="btn" data-act="check">Revisar</button><button class="btn ghost" data-act="sol">'+(M.rev[k]?'Ocultar solución':'Ver solución')+'</button></div>';
+    h+='<p class="verify" style="margin-top:14px"><b>Qué hace esta revisión:</b> busca patrones en el texto (palabras clave, estructura). No ejecuta ABAP ni valida la sintaxis completa. Para una revisión real, pega tu código en el chat.</p>';
+    var res=M.res[k];
+    if(res){
+      h+='<ul class="checks">'+res.map(function(r){return '<li><span class="'+(r.ok?'y':(r.opt?'o':'n'))+'">'+(r.ok?'✓':(r.opt?'○':'✗'))+'</span><span>'+esc(r.t)+(r.opt?' (opcional)':'')+(r.ok?'':'<small>'+esc(r.h)+'</small>')+'</span></li>';}).join('')+'</ul>';
+      if(res.every(function(r){return r.ok||r.opt;}))h+='<div class="fb ok"><b>Todo en orden.</b> Cumple los puntos del enunciado.</div>';
+    }
+    if(M.rev[k])h+='<h3>Una solución posible</h3>'+K(ex.solution);
+  }else if(ex.kind==='cases'){
+    var cs=M.cases[k]=M.cases[k]||{};
+    h+='<h2>'+esc(ex.title||'Ejercicio')+'</h2><p>'+esc(ex.intro)+'</p>';
+    ex.cases.forEach(function(c,i){
+      var v=cs[i],done=M.res[k]!=null;
+      h+='<div class="case"><div>'+(/^[A-Z_]+$/.test(c.p)?'<code>'+esc(c.p)+'</code>':esc(c.p))+'</div><select id="case-'+d+'-'+i+'" data-act-input="case" data-i="'+i+'"><option value="">Elige…</option>'+ex.options.map(function(o,j){return '<option value="'+j+'"'+(v===String(j)?' selected':'')+'>'+esc(o)+'</option>';}).join('')+'</select>';
+      if(done){var ok=v===String(c.a);h+='<p class="why"><span class="r" style="color:var(--'+(ok?'ok':'bad')+')">'+(ok?'✓ Correcto. ':'✗ Mejor: '+esc(ex.options[c.a])+'. ')+'</span>'+esc(c.why)+'</p>';}
+      h+='</div>';
+    });
+    h+='<div class="row"><button class="btn" data-act="casesCheck">Comprobar</button></div>';
+    if(M.res[k]!=null){var good=ex.cases.every(function(c,i){return cs[i]===String(c.a);});h+=good?'<div class="fb ok"><b>Todos correctos.</b></div>':'<div class="fb bad">Revisa las que han fallado y vuelve a comprobar.</div>';}
+  }else{
+    h+=pBuilder(m);
+  }
+  h+='<div class="row"><button class="btn ghost" data-act="step" data-s="3">Ir al quiz</button></div></div>';
+  return h;
+}
+
+/* Constructor de especificaciones (módulo 11) */
+var BF=[
+ ['titulo','Título','input','Informe de partidas abiertas de proveedor vencidas'],
+ ['objetivo','Objetivo y contexto','ta','Tesorería necesita ver cada semana las partidas abiertas de proveedor vencidas de la sociedad 1002 para priorizar pagos. Hoy se hace a mano con una exportación.'],
+ ['disparador','Cuándo se ejecuta','ta','Transacción propia ZFI_VENC. También en job semanal, los lunes a las 06:00, con variante guardada.'],
+ ['entradas','Entradas (pantalla de selección)','ta','- Sociedad (BUKRS), obligatoria, un valor.\n- Fecha clave (BUDAT), obligatoria, por defecto fecha del día.\n- Proveedor (LIFNR), opcional, rango.'],
+ ['logica','Reglas de negocio','ta','1. Seleccionar las partidas abiertas de proveedor de BSIK de la sociedad indicada, con vencimiento anterior a la fecha clave.\n2. Calcular los días de retraso como fecha clave menos vencimiento.\n3. Aplicar el recargo si procede.\n4. Mostrar los proveedores más importantes primero y que se vea rápidamente.'],
+ ['salida','Salida','ta','ALV con columnas: LIFNR, NAME1, BELNR, FAEDT, días de retraso, WRBTR, WAERS. Totales por proveedor.'],
+ ['errores','Errores y mensajes','ta','Sin datos: mensaje I «No hay partidas vencidas». Sin autorización sobre la sociedad: mensaje E «Sin autorización para la sociedad».'],
+ ['pruebas','Casos de prueba con resultado esperado','ta','Caso 1: sociedad 1002, fecha clave 31.01.2026, proveedor 1000234 con factura vencida el 15.01.2026: 16 días de retraso.\nCaso 2: sociedad 1002 sin partidas vencidas: mensaje I.']
+];
+var VAGUE=[
+ [/\betc\.?(?=\W|$)/i,'Lista abierta. Escribe todos los elementos.'],
+ [/si procede|cuando proceda|seg[uú]n proceda|si aplica|si corresponde/i,'Condición sin definir. Escribe cuándo exactamente.'],
+ [/\bdeber[ií]a(n)?\b/i,'No es un requisito. Usa el presente: «muestra», «bloquea».'],
+ [/r[aá]pid(o|a|os|as|amente)\b|lo antes posible|inmediat\w+/i,'Sin medida. Indica un tiempo y un volumen.'],
+ [/\balgun[oa]s?\b|\bvari[oa]s\b|\bmuchos?\b|\bpocos?\b/i,'Cantidad vaga. Indica cuántos o cuáles.'],
+ [/adecuad[oa]s?|correct[oa]s?|\bbien\b|normal(es)?|habitual(es)?/i,'Juicio subjetivo. Define el criterio.'],
+ [/m[aá]s importantes?|principales|relevantes/i,'Define el criterio de importancia (por ejemplo, saldo mayor que X).'],
+ [/como siempre|igual que antes|similar a|y dem[aá]s/i,'Referencia implícita. Descríbelo.']
+];
+function bVal(k){return (M.builder&&M.builder[k]!=null)?M.builder[k]:'';}
+function initBuilder(){if(!M.builder){M.builder={};BF.forEach(function(f){M.builder[f[0]]=f[3];});}}
+function bLint(){
+  var chips=[];
+  BF.forEach(function(f){var t=bVal(f[0]);VAGUE.forEach(function(v){var mm=t.match(v[0]);if(mm)chips.push({field:f[1],txt:mm[0],adv:v[1]});});});
+  var full=BF.every(function(f){return bVal(f[0]).trim().length>=(f[0]==='titulo'?5:25);});
+  var tech=/\b[A-Z]{4,}\b/.test(bVal('logica'))||/\b[A-Z]{3,}-[A-Z]{3,}\b/.test(bVal('logica'));
+  var vals=/\d/.test(bVal('pruebas'));
+  return {chips:chips,checks:[
+   {t:'Todos los apartados tienen contenido',ok:full},
+   {t:'Sin frases ambiguas',ok:chips.length===0},
+   {t:'Las reglas citan campos o tablas por su nombre técnico (BUKRS, BSIK…)',ok:tech},
+   {t:'Las pruebas llevan valores concretos',ok:vals}
+  ]};
+}
+function bText(){
+  var h='ESPECIFICACIÓN FUNCIONAL · '+bVal('titulo')+'\n';
+  var sec=[['objetivo','1. OBJETIVO Y CONTEXTO'],['disparador','2. DISPARADOR'],['entradas','3. ENTRADAS'],['logica','4. REGLAS DE NEGOCIO'],['salida','5. SALIDA'],['errores','6. ERRORES Y MENSAJES'],['pruebas','7. CASOS DE PRUEBA']];
+  sec.forEach(function(s){h+='\n'+s[1]+'\n'+bVal(s[0]).trim()+'\n';});
+  return h;
+}
+function pBuilder(m){
+  initBuilder();
+  var h='<h2>Ejercicio: construye una especificación</h2><p>Hay un ejemplo cargado con varias frases ambiguas a propósito. Detéctalas con el panel de avisos y corrígelas. También puedes sustituir todo por tu propio caso.</p>';
+  BF.forEach(function(f){
+    var id='b-'+f[0];
+    h+='<label class="f" for="'+id+'">'+esc(f[1])+'</label>';
+    h+=f[2]==='input'?'<input type="text" id="'+id+'" data-act-input="b" data-k="'+f[0]+'" value="'+esc(bVal(f[0]))+'">':'<textarea id="'+id+'" rows="'+(f[0]==='logica'?6:3)+'" spellcheck="false" data-act-input="b" data-k="'+f[0]+'">'+esc(bVal(f[0]))+'</textarea>';
+  });
+  h+='<h3>Revisión</h3><div id="b-lint"></div>';
+  h+='<h3>Texto para copiar</h3><pre class="code" id="b-out" style="white-space:pre-wrap"></pre><div class="row"><button class="btn" data-act="bcopy">Copiar texto</button><span id="b-msg" style="align-self:center;color:var(--muted);font-size:13px"></span></div>';
+  return h;
+}
+function bRefresh(m){
+  var L=bLint(),el=document.getElementById('b-lint');if(!el)return;
+  el.innerHTML=(L.chips.length?'<div class="chips">'+L.chips.map(function(c){return '<div class="chip"><b>'+esc(c.field)+':</b> «'+esc(c.txt)+'». '+esc(c.adv)+'</div>';}).join('')+'</div>':'')+'<ul class="checks">'+L.checks.map(function(c){return '<li><span class="'+(c.ok?'y':'n')+'">'+(c.ok?'✓':'✗')+'</span><span>'+esc(c.t)+'</span></li>';}).join('')+'</ul>'+(L.checks.every(function(c){return c.ok;})?'<div class="fb ok"><b>Especificación completa.</b> Lista para enviar al desarrollador.</div>':'');
+  document.getElementById('b-out').textContent=bText();
+  if(L.checks.every(function(c){return c.ok;})&&!(P.prog[m.id]||{}).ex){exOk(m);renderSide();var t=document.querySelector('.tab[data-s="2"]');if(t&&!t.querySelector('.ck'))t.insertAdjacentHTML('beforeend','<span class="ck">✓</span>');}
+}
+function pQuiz(m){
+  var st=M.quiz[m.id]=M.quiz[m.id]||[];
+  var h='<div class="panel"><p><span class="tag">Teoría razonada</span> Tres preguntas cortas.</p>';
+  m.quiz.forEach(function(q,i){
+    var sel=st[i];
+    h+='<div class="card"><div class="q">'+(i+1)+'. '+esc(q.q)+'</div><div class="opts">'+q.o.map(function(o,j){
+      var cls='',dis=sel!=null?' disabled':'';
+      if(sel!=null){if(j===q.a)cls=' ok';else if(j===sel)cls=' bad';}
+      return '<button class="opt'+cls+'"'+dis+' data-act="qpick" data-i="'+i+'" data-o="'+j+'">'+esc(o)+'</button>';
+    }).join('')+'</div>';
+    if(sel!=null)h+='<div class="fb '+(sel===q.a?'ok':'bad')+'"><b>'+(sel===q.a?'Correcto. ':'No exactamente. ')+'</b>'+esc(q.why)+'</div>';
+    h+='</div>';
+  });
+  var answered=st.filter(function(x){return x!=null;}).length;
+  if(answered===m.quiz.length){
+    var sc=m.quiz.filter(function(q,i){return st[i]===q.a;}).length;
+    h+='<div class="card"><div class="score">'+sc+' / '+m.quiz.length+'</div><p>'+(sc===m.quiz.length?'Módulo dominado.':sc/m.quiz.length>=0.67?'Bien. Repasa la pregunta fallada en la lección.':'Conviene releer la lección y repetir el quiz.')+'</p></div>';
+    h+='<div class="row"><button class="btn ghost" data-act="qreset">Repetir quiz</button>'+(m.id<MODS.length?'<button class="btn" data-act="go" data-m="'+(m.id+1)+'">Siguiente módulo</button>':'')+'</div>';
+  }
+  return h+'</div>';
+}
+
+/* ---------- principal ---------- */
+function renderMain(){
+  var m=mod(P.cur),main=document.getElementById('main');
+  var h='<div class="eyebrow">Módulo '+m.id+' de '+MODS.length+' · '+esc(m.sub)+'</div><h1>'+esc(m.title)+'</h1><p class="why">'+esc(m.why)+'</p>';
+  h+='<p class="note"><b>Qué está comprobado:</b> nada de lo que ves aquí se ha ejecutado en un sistema SAP. Los resultados de «Predice» y las respuestas del quiz son teoría razonada. La revisión de ejercicios busca patrones en tu texto. Lo marcado como «Verifícalo en tu sistema» conviene comprobarlo en SE11, SE37, SE18 o ADT.</p>';
+  h+='<div class="tabs" role="tablist">'+STEPS.map(function(s,i){return '<button class="tab" role="tab" aria-selected="'+(i===P.step)+'" data-act="step" data-s="'+i+'">'+(i+1)+'. '+s+(stepDone(m.id,i)?'<span class="ck">✓</span>':'')+'</button>';}).join('')+'</div>';
+  h+=[pLesson,pPredict,pExercise,pQuiz][P.step](m);
+  main.innerHTML=h;
+  if(P.step===2&&cx(m).kind==='builder')bRefresh(m);
+}
+function render(){renderSide();renderReset();renderMain();}
+function toTop(){var e=document.querySelector('.eyebrow');if(e&&e.scrollIntoView)e.scrollIntoView({block:'start'});}
+
+/* ---------- eventos ---------- */
+document.addEventListener('click',function(ev){
+  var b=ev.target.closest('[data-act]');if(!b)return;
+  var act=b.getAttribute('data-act'),m=mod(P.cur);
+  if(act==='go'){P.cur=+b.getAttribute('data-m');P.step=0;save();render();toTop();}
+  else if(act==='step'){P.step=+b.getAttribute('data-s');save();renderMain();toTop();}
+  else if(act==='lessonDone'){mark(m.id,'lesson',true);P.step=1;save();render();toTop();}
+  else if(act==='pick'){var st=M.predict[m.id]=M.predict[m.id]||[];st[+b.getAttribute('data-i')]=+b.getAttribute('data-o');if(m.predict.every(function(p,i){return st[i]!=null;}))mark(m.id,'predict',true);renderSide();renderMain();}
+  else if(act==='check'){var ta=document.getElementById('code-'+dk(m));if(ta)M.code[xk(m)]=ta.value;runChecks(m);renderSide();renderMain();}
+  else if(act==='exsel'){var ta0=document.getElementById('code-'+dk(m));if(ta0)M.code[xk(m)]=ta0.value;M.exi[m.id]=+b.getAttribute('data-i');renderMain();}
+  else if(act==='sol'){var ta2=document.getElementById('code-'+dk(m));if(ta2)M.code[xk(m)]=ta2.value;M.rev[xk(m)]=!M.rev[xk(m)];renderMain();}
+  else if(act==='casesCheck'){M.res[xk(m)]=true;var cs=M.cases[xk(m)]||{};if(cx(m).cases.every(function(c,i){return cs[i]===String(c.a);}))exOk(m);renderSide();renderMain();}
+  else if(act==='qpick'){var q=M.quiz[m.id]=M.quiz[m.id]||[];q[+b.getAttribute('data-i')]=+b.getAttribute('data-o');if(m.quiz.every(function(x,i){return q[i]!=null;})){mark(m.id,'quiz',m.quiz.filter(function(x,i){return q[i]===x.a;}).length);}renderSide();renderMain();}
+  else if(act==='qreset'){M.quiz[m.id]=[];renderMain();toTop();}
+  else if(act==='resetAsk'){askReset=true;renderReset();}
+  else if(act==='resetNo'){askReset=false;renderReset();}
+  else if(act==='resetYes'){askReset=false;P.prog={};P.cur=1;P.step=0;M.predict={};M.quiz={};M.code={};M.res={};M.cases={};M.rev={};M.builder=null;M.exi={};save();render();toTop();}
+  else if(act==='bcopy'){
+    var txt=bText(),msg=document.getElementById('b-msg');
+    var fallback=function(){var out=document.getElementById('b-out'),r=document.createRange();r.selectNodeContents(out);var s=window.getSelection();s.removeAllRanges();s.addRange(r);if(msg)msg.textContent='Selecciona y copia con Ctrl+C';};
+    try{navigator.clipboard.writeText(txt).then(function(){if(msg)msg.textContent='Copiado';},fallback);}catch(e){fallback();}
+  }
+});
+document.addEventListener('input',function(ev){
+  var t=ev.target,k=t.getAttribute&&t.getAttribute('data-act-input');if(!k)return;
+  var m=mod(P.cur);
+  if(k==='code')M.code[xk(m)]=t.value;
+  else if(k==='b'){initBuilder();M.builder[t.getAttribute('data-k')]=t.value;bRefresh(m);}
+});
+document.addEventListener('change',function(ev){
+  var t=ev.target;if(!t.getAttribute||t.getAttribute('data-act-input')!=='case')return;
+  var m=mod(P.cur),cs=M.cases[xk(m)]=M.cases[xk(m)]||{};cs[t.getAttribute('data-i')]=t.value;
+});
+document.addEventListener('keydown',function(ev){
+  var t=ev.target;if(t.tagName==='TEXTAREA'&&t.getAttribute('data-act-input')==='code'&&ev.key==='Tab'){ev.preventDefault();var s=t.selectionStart;t.value=t.value.slice(0,s)+'  '+t.value.slice(t.selectionEnd);t.selectionStart=t.selectionEnd=s+2;M.code[xk(mod(P.cur))]=t.value;}
+});
+if(P.cur<1||P.cur>MODS.length)P.cur=1;
+if(P.step<0||P.step>3)P.step=0;
+render();
+})();
+</script>
+
+</body>
+</html>
